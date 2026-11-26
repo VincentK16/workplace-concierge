@@ -207,7 +207,7 @@ button{font-family:inherit}
 .fstep.in{opacity:1;transform:none}
 .fstep .h{background:var(--jade);color:#fff;padding:14px;font-size:16px}
 .fstep .h b{display:block;font-size:30px;letter-spacing:1px}
-.fstep.ab .h{background:#3D8F93}
+.fstep.abs .h{background:#3D8F93}
 .fstep ul{list-style:none;margin:0;padding:16px;font-size:18px;line-height:1.8}
 .fstep .ok{margin:0 16px 16px;background:var(--ok-l);color:var(--ok);border:1px solid #9ccc9f;border-radius:8px;padding:10px;font-weight:700;font-size:16px}
 .zone{display:flex;gap:28px;width:1240px}
@@ -608,7 +608,7 @@ var SC=[];
 SC.push({badge:"MS-4022",title:"From Agent Builder to Copilot Studio",time:"",where:"Lab overview",
 html:function(){ return '<div class="win" style="background:transparent;box-shadow:none"><div class="hero"><div class="k">CATHAY WORKPLACE CONCIERGE · 3 DECEMBER 2026</div><h2>The lab in one picture</h2>'+
 '<div class="zone"><div id="z1" style="width:290px;background:#e3f0f0;color:#3D8F93;border:2px solid #9cc7c9">Agent Builder<br><span style="font-weight:400;font-size:15px">allowed at Cathay</span></div><div id="z2" style="flex:1;background:#d9eaea;color:var(--jade);border:2px solid #7fb0b0">Copilot Studio<br><span style="font-weight:400;font-size:15px">lab sandbox: where Cathay can grow next</span></div></div>'+
-'<div class="flow" style="margin-top:14px"><div class="fstep ab" id="f1"><div class="h">STEP 1<b>ANSWER</b></div><ul><li>Instructions</li><li>Policy file</li><li>Starter prompts</li></ul><div class="ok">✓ Answers questions</div></div><div class="fstep" id="f2"><div class="h">STEP 2<b>MOVE</b></div><ul><li>Copy to Studio</li><li>Re-upload file</li><li>Test again</li></ul><div class="ok">✓ Same agent, more control</div></div><div class="fstep" id="f3"><div class="h">STEP 3<b>RECORD</b></div><ul><li>Excel tool:</li><li>Add a row</li><li>&nbsp;</li></ul><div class="ok">✓ Logs the ticket</div></div><div class="fstep" id="f4"><div class="h">STEP 4<b>ACT</b></div><ul><li>Outlook tool:</li><li>Send an email</li><li>&nbsp;</li></ul><div class="ok">✓ Emails the ticket</div></div></div>'+
+'<div class="flow" style="margin-top:14px"><div class="fstep abs" id="f1"><div class="h">STEP 1<b>ANSWER</b></div><ul><li>Instructions</li><li>Policy file</li><li>Starter prompts</li></ul><div class="ok">✓ Answers questions</div></div><div class="fstep" id="f2"><div class="h">STEP 2<b>MOVE</b></div><ul><li>Copy to Studio</li><li>Re-upload file</li><li>Test again</li></ul><div class="ok">✓ Same agent, more control</div></div><div class="fstep" id="f3"><div class="h">STEP 3<b>RECORD</b></div><ul><li>Excel tool:</li><li>Add a row</li><li>&nbsp;</li></ul><div class="ok">✓ Logs the ticket</div></div><div class="fstep" id="f4"><div class="h">STEP 4<b>ACT</b></div><ul><li>Outlook tool:</li><li>Send an email</li><li>&nbsp;</li></ul><div class="ok">✓ Emails the ticket</div></div></div>'+
 '<div class="tag" id="tag">Agent Builder answers.&nbsp; Copilot Studio acts.</div></div></div>'; },
 steps:[
 {c1:"Today we build one agent — the Cathay Workplace Concierge — and grow it in four steps.",c2:"Agent Builder is what Cathay uses today; Copilot Studio is where it can grow next.",run:function(){ q("#z1").classList.add("in"); return sleep(500).then(function(){ q("#z2").classList.add("in"); return sleep(300); }); }},
