@@ -252,6 +252,57 @@ ol.steps>li label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
 .prog{height:6px;background:#e3eded;border-radius:3px;margin-top:12px;overflow:hidden}
 .prog i{display:block;height:100%;width:0;background:var(--jade);transition:width .3s}
 @media print{.topbar,#present{display:none!important}#learn{display:block!important}.cbox button,.lsec h3 button{display:none}}
+/* Agent Builder (current UI) */
+.abh{position:absolute;inset:0;display:flex;flex-direction:column}
+.ab{position:absolute;inset:0;display:flex;background:#fff}
+.abrail{width:44px;border-inline-end:1px solid #eee;display:flex;flex-direction:column;align-items:center;gap:13px;padding-top:12px;color:#616161;font-size:14px;flex:none}
+.abrail .sep{width:22px;height:1px;background:#ddd}
+.abrail .me{margin-top:auto;margin-bottom:12px}
+.ableft{width:38%;border-inline-end:1px solid #eee;position:relative;display:flex;flex-direction:column;flex:none}
+.ableft .tr{position:absolute;top:10px;right:16px;font-size:13px;display:flex;gap:14px;color:#424242}
+.ableft .mid{margin-top:auto;padding:0 40px 70px}
+.ableft h3{font-weight:400;font-size:19px;margin:0 0 12px;color:#242424}
+.abask{border:1px solid #d6d6d6;border-radius:14px;padding:12px 14px;box-shadow:0 2px 6px rgba(0,0,0,.06);font-size:13px;color:#707070}
+.abask .row{display:flex;justify-content:space-between;margin-top:14px;color:#424242;font-size:16px}
+.ableft .disc{font-size:8.5px;color:#888;padding:0 24px 8px}
+.abright{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
+.abtop{height:42px;display:flex;align-items:center;justify-content:center;position:relative;flex:none}
+.seg{display:flex;background:#f3f3f3;border-radius:8px;padding:2px;font-size:12.5px}
+.seg span{padding:4px 12px;border-radius:6px;color:#616161;border:1px solid transparent}
+.seg span.sel{background:#fff;color:#242424;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.1);border-color:#e0e0e0}
+.abtop .acts{position:absolute;right:14px;top:8px;display:flex;gap:12px;align-items:center;font-size:14px;color:#424242}
+.abcreate{border:1px solid #e0e0e0;background:#f0f0f0;color:#bdbdbd;border-radius:6px;padding:3px 12px;font-size:12.5px;font-weight:600}
+.abcreate.on{background:#242424;color:#fff;border-color:#242424}
+.abscroll{flex:1;overflow:hidden;position:relative}
+.abscroll .inner{width:540px;margin:0 auto;padding:6px 0 160px;transition:transform .5s}
+.abcard{border:1px solid #e6e6e6;border-radius:14px;padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.abcard h5{margin:0 0 10px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.abcard h5 .i{color:#888;font-weight:400;font-size:11px}
+.abcard h5 .r{margin-inline-start:auto;display:flex;gap:8px;align-items:center;font-weight:400;color:#616161}
+.sbtn{display:inline-block;border:1px solid #d1d1d1;border-radius:6px;padding:3px 9px;font-size:11px;background:#fff;color:#242424}
+.dash{border:1px dashed #cfcfcf;border-radius:8px;padding:12px;text-align:center;font-size:11px;color:#555}
+.abin{border:1px solid #d1d1d1;border-bottom-color:#8a8a8a;border-radius:6px;padding:6px 10px;font-size:12.5px;min-height:30px;white-space:pre-wrap;color:#242424;line-height:1.4}
+.abin.ph:empty::before{content:attr(data-ph);color:#8a8a8a}
+.abin.focus{border-bottom:2px solid var(--ms)}
+.abin.tall{min-height:104px;font-size:12px}
+.abl{font-size:11.5px;font-weight:600;margin:8px 0 4px;color:#242424}
+.wc{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:12px}
+.wtag{font-size:9px;background:#f0f0f0;color:#777;border-radius:4px;padding:1px 5px}
+.wc .sw{margin-inline-start:auto}
+.sw{width:28px;height:15px;border-radius:8px;background:#242424;position:relative;display:inline-block;transition:background .3s;flex:none}
+.sw::after{content:"";position:absolute;top:2px;left:15px;width:11px;height:11px;border-radius:50%;background:#fff;transition:left .3s}
+.sw.offt{background:#fff;border:1px solid #616161}.sw.offt::after{left:2px;top:1px;background:#616161}
+.wcico{width:18px;text-align:center;font-size:12px}
+.abhr{height:1px;background:#e6e6e6;margin:5px 0}
+.sprow{display:grid;grid-template-columns:130px 1fr 44px;gap:8px;align-items:center;margin-bottom:6px}
+.sprow .ic{color:#616161;font-size:12px}
+.kfile{display:flex;align-items:center;gap:8px;border:1px solid #e0e0e0;border-radius:8px;padding:7px 10px;font-size:12px;margin-top:8px;text-align:start;background:#fff}
+.abprev{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:10px 40px 0}
+.abprev .msgs{width:100%;max-width:640px}
+.chips2{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.chip2{border:1px solid #e0e0e0;border-radius:10px;padding:9px 13px;font-size:12.5px;max-width:250px;text-align:start;background:#fff}
+.chip2 b{display:block;font-size:12px;margin-bottom:3px}
+.abprev .pvin{width:100%;max-width:640px;margin:10px 0 16px}
 </style>
 </head>
 <body>
@@ -454,26 +505,34 @@ function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/
 /* ---------- UI templates ---------- */
 function chrome(url){ return '<div class="chrome"><div class="d"><i></i><i></i><i></i></div><div class="url">🔒 '+url+'</div></div>'; }
 var AG='<div class="agico">CW</div>';
-function abWin(id,edit){ return '<div class="win" id="'+id+'">'+chrome("m365.cloud.microsoft/chat")+'<div class="appbody">'+
-'<div class="m365top"><div class="waffle">'+'<i></i>'.repeat(9)+'</div><b>Microsoft 365 Copilot</b><div class="srch">🔍 Search</div><div class="av">LA</div></div>'+
-'<div class="m365main"><div class="rail"><div class="ri"><span class="cpl"></span> Copilot</div><div class="ri">💬 Chat</div><div class="ri">📄 Pages</div><div class="ri">🗂 Notebooks</div><div class="rh">Agents</div><div class="ri">🔎 Researcher</div><div class="ri">📊 Analyst</div>'+(edit?'<div class="ri sel">'+'<span class="agico" style="width:22px;height:22px;font-size:9px;border-radius:5px">CW</span> Cathay Workplace Concierge</div>':'')+'<div class="ri" id="abCreate">＋ Create agent</div></div>'+
-'<div class="canvas">'+
-'<div class="home'+(edit?' hide':'')+'" id="abHome"><span class="cpl" style="width:46px;height:46px;border-radius:12px"></span><h2>Hi Lab Learner, how can I help?</h2><div class="homebox">Message Copilot</div></div>'+
-'<div class="builder'+(edit?'':' hide')+'" id="abBuilder"><div class="bhead"><span class="nm" id="abHeadNm">'+(edit?'Edit agent':'New agent')+'</span><div class="tabs"><span class="tab'+(edit?'':' sel')+'" id="abTabD">Describe</span><span class="tab'+(edit?' sel':'')+'" id="abTabC">Configure</span></div><div style="margin-inline-start:auto;display:flex;gap:8px;position:relative"><span class="btn ghost" id="abMore">… </span><span class="btn pri" id="abCreateBtn">'+(edit?'Update':'Create')+'</span></div></div>'+
-'<div class="bbody"><div class="bdesc'+(edit?' hide':'')+'" id="abDesc"><div class="bubble">Hi! I\'ll help you build a new agent. You can describe what it should do, or switch to <b>Configure</b> to set it up yourself.</div><div class="pvin" style="margin:auto 0 0">Describe your agent…</div></div>'+
-'<div class="bform'+(edit?'':' hide')+'" id="abForm"><div class="inner">'+
-'<div class="lbl">Name</div><div class="fld ph" data-ph="Name your agent" id="fName">'+(edit?esc(T.name):'')+'</div>'+
-'<div class="lbl">Description</div><div class="fld ph" data-ph="Describe what your agent does" id="fDesc">'+(edit?esc(T.desc):'')+'</div>'+
-'<div class="lbl">Instructions</div><div class="fld ph tall" data-ph="Give your agent instructions" id="fInstr">'+(edit?esc(T.instr):'')+'</div>'+
-'<div class="lbl">Knowledge</div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap" id="kRow"><span class="btn" id="kUpload">⤒ Upload</span><span class="btn">Add sources</span><span class="chip'+(edit?'':' hide')+'" id="kFile"><span class="docx">W</span>'+esc(T.file)+' <span class="pill ready">Ready</span></span></div>'+
-'<div style="display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px" id="webRow"><span class="tog'+(edit?' offt':'')+'" id="webTog"></span> Search all websites <span class="hint">(web search)</span></div>'+
-'<div class="lbl">Starter prompts</div><div class="fld ph" data-ph="Title / message" id="sp1">'+(edit?esc(T.p1):'')+'</div><div style="height:8px"></div><div class="fld ph" data-ph="Title / message" id="sp2">'+(edit?esc(T.p2):'')+'</div>'+
+function abWin(id,edit){
+var v=function(s){ return edit?esc(s):''; };
+var wc=function(ico,name,tag,on,idA){ return '<div class="wc"'+(idA?' id="'+idA+'Row"':'')+'><span class="wcico">'+ico+'</span>'+name+(tag?' <span class="wtag">Search all</span>':'')+'<span class="sw'+(on?'':' offt')+'"'+(idA?' id="'+idA+'"':'')+'></span></div>'; };
+return '<div class="win" id="'+id+'">'+chrome(edit?"m365.cloud.microsoft/chat/agents/cathay-workplace-concierge/edit":"m365.cloud.microsoft/chat")+'<div class="appbody">'+
+'<div class="abh'+(edit?' hide':'')+'" id="abHome"><div class="m365top"><div class="waffle">'+'<i></i>'.repeat(9)+'</div><b>Microsoft 365 Copilot</b><div class="srch">\ud83d\udd0d Search</div><div class="av">LA</div></div>'+
+'<div class="m365main"><div class="rail"><div class="ri"><span class="cpl"></span> Copilot</div><div class="ri">\ud83d\udcac Chat</div><div class="ri">\ud83d\udd0e Search</div><div class="ri">\ud83d\udcda Library</div><div class="rh">Agents</div><div class="ri">\ud83d\udd0e Researcher</div><div class="ri">\ud83d\udcca Analyst</div><div class="ri" id="abCreate">\uff0b Create agent</div></div>'+
+'<div class="canvas"><div class="home"><span class="cpl" style="width:46px;height:46px;border-radius:12px"></span><h2>Hi Lab Learner, how can I help?</h2><div class="homebox">Message Copilot</div></div></div></div></div>'+
+'<div class="ab'+(edit?'':' hide')+'" id="abBuilder">'+
+'<div class="abrail"><span>\u25eb</span><span>\u2302</span><div class="sep"></div><span>\u2295</span><span>\u2315</span><span>\u2161</span><span>\u27f2</span><span>\u270e</span><span>\u25ce</span><span>\u29c9</span><div class="sep"></div><span>\ud83d\udccc</span><span>\ud83d\uddc0</span><span class="me"><span class="av" style="width:24px;height:24px;font-size:9px">LA</span></span></div>'+
+'<div class="ableft"><div class="tr"><span style="color:#107c10">\ud83d\udee1</span><span>\u22ef</span></div><div class="mid"><h3>Build your own specialist agent</h3><div class="abask">What would you like help with?<div class="row"><span>+</span><span>\ud83c\udf99</span></div></div></div><div class="disc">AI generated content may be incorrect | Copilot Studio capabilities in M365 are processed by the Copilot Studio service.</div></div>'+
+'<div class="abright"><div class="abtop"><div class="seg"><span class="sel" id="abTabC">Configure</span><span id="abTabP">Preview</span></div><div class="acts"><span class="abcreate'+(edit?' on':'')+'" id="abCreateBtn">'+(edit?'Update':'Create')+'</span><span id="abMore">\u22ef</span><span>\u2715</span></div></div>'+
+'<div class="abscroll" id="abForm"><div class="inner">'+
+'<div class="abcard"><div style="display:flex;gap:12px;align-items:flex-start"><div class="agico" style="width:42px;height:42px;font-size:14px;border-radius:10px;flex:none">CW</div><div style="flex:1"><div class="abl" style="margin-top:0">Name</div><div class="abin ph" data-ph="Enter a name for your agent" id="fName">'+v(T.name)+'</div><div class="abl">Description</div><div class="abin ph" data-ph="Describe what your agent does" id="fDesc">'+v(T.desc)+'</div></div></div></div>'+
+'<div class="abcard"><h5>Instructions <span class="i">\u24d8</span></h5><div class="abin ph tall" data-ph="Tell your agent how to behave, what to do and what to avoid" id="fInstr">'+v(T.instr)+'</div></div>'+
+'<div class="abcard"><h5>Agents &amp; Skills <span class="i">\u24d8</span><span class="r"><span class="sbtn">Add \u2304</span></span></h5><div class="dash">Add agents and skills to help this agent with specialized tasks.</div></div>'+
+'<div class="abcard" id="kCard"><h5>Knowledge <span class="i">\u24d8</span><span class="r">\u21bb <span class="sbtn">\u275e Suggest improvements</span> \u2699</span></h5><div class="dash">Focus your agent by adding specific knowledge sources<br><span class="sbtn" id="kAdd" style="margin-top:8px">\uff0b Add knowledge</span> <span style="color:#888">or just drop files here</span>'+
+'<div class="kfile'+(edit?'':' hide')+'" id="kFile"><span class="docx">W</span>'+esc(T.file)+'<span class="pill ready" style="margin-inline-start:auto">Ready</span></div></div>'+
+'<div class="abl" style="margin-top:12px;font-weight:600">Work content <span class="hint">\u24d8</span></div>'+
+wc('<span style="color:#0F6CBD">\u2601</span>','Cloud files',1,1)+wc('<span class="conn o" style="width:16px;height:16px;font-size:9px;border-radius:3px;display:inline-flex">O</span>','Outlook',1,1)+wc('<span class="conn" style="width:16px;height:16px;font-size:9px;border-radius:3px;display:inline-flex;background:#5B5FC7">T</span>','Teams',1,1)+wc('<span style="color:#117865">\u25e3</span>','Fabric',0,0)+wc('\ud83d\udd0c','Copilot connectors \u203a',0,0)+wc('\u25a6','Dynamics 365 and Power Apps',0,0)+
+'<div class="abhr"></div>'+wc('\ud83c\udf10','Web search',1,!edit,'webTog')+'<div class="abhr"></div><div class="wc"><span class="wcico">\ud83d\udcce</span>Attachments <span class="hint">\u24d8</span></div></div>'+
+'<div class="abcard" id="spCard"><h5>Suggested prompts <span class="i">\u24d8</span></h5><div class="sprow"><span class="abl" style="margin:0">Title</span><span class="abl" style="margin:0">Message</span><span></span></div>'+
+'<div class="sprow"><div class="abin ph" data-ph="Enter a title" id="sp1t">'+v("Office days")+'</div><div class="abin ph" data-ph="Enter a message" id="sp1">'+v(T.p1)+'</div><span class="ic">\u27f2 \ud83d\uddd1</span></div>'+
+'<div class="sprow"><div class="abin ph" data-ph="Enter a title" id="sp2t">'+v("London hotel limit")+'</div><div class="abin ph" data-ph="Enter a message" id="sp2">'+v(T.p2)+'</div><span class="ic">\u27f2 \ud83d\uddd1</span></div></div>'+
 '</div></div>'+
-'<div class="bprev"><div class="pvh"><span>Preview</span><span>↻</span></div><div class="pvbody"><div class="pvid">'+AG+'<b id="pvName">'+(edit?esc(T.name):'New agent')+'</b></div><div class="starters" id="pvStart">'+(edit?'<div class="starter">'+esc(T.p1)+'</div><div class="starter">'+esc(T.p2)+'</div>':'')+'</div><div class="msgs" id="pvMsgs"></div></div><div class="pvin" id="pvIn">Ask a question</div></div>'+
-'</div>'+
-'<div class="menu hide" id="abMenu" style="right:110px;top:50px"><div>⚙ Settings</div><div id="mCopy">⧉ Copy to Copilot Studio</div><div>↗ Share</div><div>🗑 Delete agent</div></div>'+
-'</div>'+
-'</div></div></div></div>'; }
+'<div class="abprev hide" id="abPrev"><div class="pvid">'+AG+'<b id="pvName">'+(edit?esc(T.name):'New agent')+'</b><span class="hint">'+esc(T.desc)+'</span></div><div class="chips2" id="pvStart"><div class="chip2" id="st1"><b>Office days</b>'+esc(T.p1)+'</div><div class="chip2" id="st2"><b>London hotel limit</b>'+esc(T.p2)+'</div></div><div class="msgs" id="pvMsgs"></div><div class="pvin" id="pvIn">Message Cathay Workplace Concierge</div></div>'+
+'<div class="menu hide" id="abMenu" style="right:14px;top:36px"><div>\u2699 Settings</div><div id="mCopy">\u29c9 Copy to Copilot Studio</div><div>\u2197 Share</div><div>\ud83d\uddd1 Delete agent</div></div>'+
+'</div></div>'+
+'</div></div>'; }
 
 function csWin(id,st){ st=st||{};
 var tools=(st.tools||[]).map(function(t){return '<div class="it"><span class="conn '+t[0]+'">'+(t[0]==="x"?"X":"O")+'</span><div><b>'+t[1]+'</b><div class="hint">'+t[2]+'</div></div><span class="pill ready" style="margin-inline-start:auto">On</span></div>';}).join("");
@@ -561,24 +620,24 @@ SC.push({badge:"Exercise 1",title:"Build the agent in Agent Builder",time:"35 mi
 html:function(){ return abWin("w1",false); },
 steps:[
 {c1:"Open Microsoft 365 Copilot and select Create agent.",c2:"It's in the left pane, under Agents.",run:function(){ return click("#abCreate").then(function(){ hide("#abHome"); show("#abBuilder"); return sleep(500); }); }},
-{c1:"Select Configure.",c2:"Describe lets you chat to build it — today we fill each box ourselves.",run:function(){ return click("#abTabC").then(function(){ tab("#abBuilder .tab","#abTabC"); hide("#abDesc"); show("#abForm"); return sleep(400); }); }},
-{c1:"Name: Cathay Workplace Concierge",c2:"",copy:T.name,run:function(){ return click("#fName").then(function(){ return type("#fName",T.name); }).then(function(){ q("#pvName").textContent=T.name; }); }},
+{c1:"Select Configure.",c2:"The left side lets you chat to build it \u2014 today we fill each box on the Configure tab ourselves.",run:function(){ return click("#abTabC").then(function(){ tab("#abBuilder .seg span","#abTabC"); return sleep(300); }); }},
+{c1:"Name: Cathay Workplace Concierge",c2:"",copy:T.name,run:function(){ return click("#fName").then(function(){ return type("#fName",T.name); }).then(function(){ q("#pvName").textContent=T.name; q("#abCreateBtn").classList.add("on"); }); }},
 {c1:"Description: Answers questions about hybrid work, rooms, travel and facilities.",c2:"",copy:T.desc,run:function(){ return click("#fDesc").then(function(){ return type("#fDesc",T.desc); }); }},
-{c1:"Instructions: paste the instruction text from your lab guide.",c2:"Answer only from the policy file · say so if it's not there · short bullet points.",copy:T.instr,run:function(){ return click("#fInstr").then(function(){ return type("#fInstr",T.instr,{paste:true}); }); }},
-{c1:"Knowledge: select Upload and add "+T.file+".",c2:"Wait until the file shows Ready.",run:function(){ return scrollTo("#kRow","#abForm").then(function(){ return click("#kUpload"); }).then(function(){ var bg=document.createElement("div"); bg.className="modalBg"; bg.id="fpBg"; bg.innerHTML='<div class="modal">'+filePicker(T.file,"w")+'</div>'; q("#w1 .appbody").appendChild(bg); return sleep(500); }).then(function(){ return click("#fpRow"); }).then(function(){ q("#fpRow").classList.add("sel"); return click("#fpOpen"); }).then(function(){ q("#fpBg").remove(); show("#kFile"); var p=q("#kFile .pill"); p.className="pill prog"; p.textContent="Uploading…"; return sleep(1100); }).then(function(){ var p=q("#kFile .pill"); p.className="pill ready"; p.textContent="Ready"; return sleep(300); }); }},
-{c1:"Turn off web search.",c2:"So the agent answers only from the Cathay policy file.",run:function(){ return click("#webTog").then(function(){ q("#webTog").classList.add("offt"); return sleep(400); }); }},
-{c1:"Starter prompts: add these two.",c2:"",copy:T.p1+"\n"+T.p2,run:function(){ return scrollTo("#sp1","#abForm").then(function(){ return click("#sp1"); }).then(function(){ return type("#sp1",T.p1); }).then(function(){ return click("#sp2"); }).then(function(){ return type("#sp2",T.p2); }).then(function(){ q("#pvStart").innerHTML='<div class="starter" id="st1">'+esc(T.p1)+'</div><div class="starter" id="st2">'+esc(T.p2)+'</div>'; return sleep(400); }); }},
-{c1:"Test prompt 1 in the preview pane.",c2:"Expected: 3 days a week, and it names the policy.",run:function(){ return click("#st1").then(function(){ hide("#pvStart"); msg("#pvMsgs","u",esc(T.p1)); return reply("#pvMsgs",'<ul><li>You must be in the office <b>3 days a week</b>.</li></ul><div class="src"><span class="docx" style="width:16px;height:18px;font-size:9px">W</span>Policy used: Hybrid work · '+esc(T.file)+'</div>'); }); }},
-{c1:"Test prompt 2.",c2:"Expected: GBP 220, and it names the policy.",run:function(){ return click("#pvIn").then(function(){ return type("#pvIn",T.p2); }).then(function(){ q("#pvIn").textContent="Ask a question"; msg("#pvMsgs","u",esc(T.p2)); return reply("#pvMsgs",'<ul><li>The hotel limit in London is <b>GBP 220</b> per night.</li></ul><div class="src"><span class="docx" style="width:16px;height:18px;font-size:9px">W</span>Policy used: Duty travel · '+esc(T.file)+'</div>'); }); }},
-{c1:"Both answers check out — select Create.",c2:"✅ Check: the agent answers 3 days and GBP 220, and names the policy.",run:function(){ return click("#abCreateBtn").then(function(){ toast("Your agent has been created"); return callout("✅ Check: answers <b>3 days</b> and <b>GBP 220</b>, and names the policy",470,330); }); }}
+{c1:"Instructions: paste the instruction text from your lab guide.",c2:"Answer only from the policy file \u00b7 say so if it's not there \u00b7 short bullet points.",copy:T.instr,run:function(){ return click("#fInstr").then(function(){ return type("#fInstr",T.instr,{paste:true}); }); }},
+{c1:"Knowledge: select Add knowledge, upload "+T.file+".",c2:"Wait until the file shows Ready.",run:function(){ return scrollTo("#kCard","#abForm").then(function(){ return click("#kAdd"); }).then(function(){ var m=document.createElement("div"); m.className="menu"; m.id="kMenu"; m.style.cssText="left:50%;top:150px;width:230px"; m.innerHTML='<div id="kUp">\u2912 Upload files</div><div>\u2601 OneDrive and SharePoint</div><div>\ud83c\udf10 Public websites</div>'; q("#abBuilder .abright").appendChild(m); return sleep(400); }).then(function(){ return click("#kUp"); }).then(function(){ q("#kMenu").remove(); var bg=document.createElement("div"); bg.className="modalBg"; bg.id="fpBg"; bg.innerHTML='<div class="modal">'+filePicker(T.file,"w")+'</div>'; q("#w1 .appbody").appendChild(bg); return sleep(500); }).then(function(){ return click("#fpRow"); }).then(function(){ q("#fpRow").classList.add("sel"); return click("#fpOpen"); }).then(function(){ q("#fpBg").remove(); show("#kFile"); var p=q("#kFile .pill"); p.className="pill prog"; p.textContent="Uploading\u2026"; return sleep(1100); }).then(function(){ var p=q("#kFile .pill"); p.className="pill ready"; p.textContent="Ready"; return sleep(300); }); }},
+{c1:"Turn off Web search.",c2:"So the agent answers only from the Cathay policy file.",run:function(){ return scrollTo("#webTogRow","#abForm").then(function(){ ring("#webTogRow"); return click("#webTog"); }).then(function(){ q("#webTog").classList.add("offt"); return sleep(500); }).then(function(){ clearRings(); }); }},
+{c1:"Suggested prompts: add these two.",c2:"Give each a short title, then paste the message.",copy:T.p1+"\n"+T.p2,run:function(){ return scrollTo("#spCard","#abForm").then(function(){ return click("#sp1t"); }).then(function(){ return type("#sp1t","Office days"); }).then(function(){ return click("#sp1"); }).then(function(){ return type("#sp1",T.p1); }).then(function(){ return click("#sp2t"); }).then(function(){ return type("#sp2t","London hotel limit"); }).then(function(){ return click("#sp2"); }).then(function(){ return type("#sp2",T.p2); }); }},
+{c1:"Select Preview and test prompt 1.",c2:"Expected: 3 days a week, and it names the policy.",run:function(){ return click("#abTabP").then(function(){ tab("#abBuilder .seg span","#abTabP"); hide("#abForm"); show("#abPrev"); return sleep(500); }).then(function(){ return click("#st1"); }).then(function(){ hide("#pvStart"); msg("#pvMsgs","u",esc(T.p1)); return reply("#pvMsgs",'<ul><li>You must be in the office <b>3 days a week</b>.</li></ul><div class="src"><span class="docx" style="width:16px;height:18px;font-size:9px">W</span>Policy used: Hybrid work \u00b7 '+esc(T.file)+'</div>'); }); }},
+{c1:"Test prompt 2.",c2:"Expected: GBP 220, and it names the policy.",run:function(){ return click("#pvIn").then(function(){ return type("#pvIn",T.p2); }).then(function(){ q("#pvIn").textContent="Message Cathay Workplace Concierge"; msg("#pvMsgs","u",esc(T.p2)); return reply("#pvMsgs",'<ul><li>The hotel limit in London is <b>GBP 220</b> per night.</li></ul><div class="src"><span class="docx" style="width:16px;height:18px;font-size:9px">W</span>Policy used: Duty travel \u00b7 '+esc(T.file)+'</div>'); }); }},
+{c1:"Both answers check out \u2014 select Create.",c2:"\u2705 Check: the agent answers 3 days and GBP 220, and names the policy.",run:function(){ return click("#abCreateBtn").then(function(){ toast("Your agent has been created"); return callout("\u2705 Check: answers <b>3 days</b> and <b>GBP 220</b>, and names the policy",470,330); }); }}
 ]});
 
-SC.push({badge:"Exercise 2",title:"Copy it to Copilot Studio",time:"20 min",where:"Agent Builder → Copilot Studio",
+SC.push({badge:"Exercise 2",title:"Copy it to Copilot Studio",time:"20 min",where:"Agent Builder \u2192 Copilot Studio",
 html:function(){ return abWin("w1",true)+csWin("w2",{}); },
 init:function(){ q("#w2").classList.add("off"); },
 steps:[
-{c1:"Open your agent in edit mode.",c2:"Select it under Agents, then Edit.",run:function(){ return moveTo("#abHeadNm"); }},
-{c1:"Select … (More options), then Copy to Copilot Studio.",c2:"⚠ Select it once only — otherwise you get two copies.",run:function(){ return click("#abMore").then(function(){ show("#abMenu"); return sleep(400); }).then(function(){ return click("#mCopy"); }).then(function(){ q("#mCopy").classList.add("hov"); return sleep(300); }).then(function(){ hide("#abMenu"); toast("Copying your agent to Copilot Studio…"); return sleep(1300); }).then(function(){ return win("#w2"); }); }},
+{c1:"Open your agent in edit mode.",c2:"Select it under Agents, then Edit \u2014 it opens on the Configure tab.",run:function(){ return moveTo("#abTabC"); }},
+{c1:"Select \u2026 (More options), then Copy to Copilot Studio.",c2:"\u26a0 Select it once only \u2014 otherwise you get two copies.",run:function(){ return click("#abMore").then(function(){ show("#abMenu"); return sleep(400); }).then(function(){ return click("#mCopy"); }).then(function(){ q("#mCopy").classList.add("hov"); return sleep(300); }).then(function(){ hide("#abMenu"); toast("Copying your agent to Copilot Studio\u2026"); return sleep(1300); }).then(function(){ return win("#w2"); }); }},
 {c1:"In Copilot Studio, select Save.",c2:"Name, description, instructions and prompts came across.",run:function(){ ring("#vOv .cscard"); return click("#csSave").then(function(){ toast("Saved"); clearRings(); return sleep(400); }); }},
 {c1:"Notice: Knowledge is empty.",c2:"💡 Your name, instructions and prompts copy across, but uploaded files don't.",run:function(){ ring("#ovKnEmpty"); return moveTo("#ovKnEmpty").then(function(){ return callout("💡 <b>Why upload again?</b><br>Your name, instructions and prompts copy across,<br>but uploaded files don't.",900,470,true); }); }},
 {c1:"Go to Knowledge, select Add knowledge, then Upload file.",c2:"Add the policy file again and wait until it says Ready.",run:function(){ $$("[data-tmp]",stage).forEach(function(e){e.remove()}); clearRings(); return click("#tKn").then(function(){ tab(".cstab","#tKn"); view(".csv","#vKn"); return sleep(400); }).then(function(){ return click("#knAdd"); }).then(function(){ q("#mdlBody").innerHTML='<h3>Add knowledge</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="it list" id="kUp" style="border:1px solid #ddd;border-radius:8px;padding:14px">⤒ <b>Upload file</b><div class="hint">Drag files or browse</div></div><div style="border:1px solid #ddd;border-radius:8px;padding:14px">🌐 Public websites</div><div style="border:1px solid #ddd;border-radius:8px;padding:14px">🗂 SharePoint</div><div style="border:1px solid #ddd;border-radius:8px;padding:14px">🧩 Dataverse</div></div>'; show("#mdl"); return sleep(500); }).then(function(){ return click("#kUp"); }).then(function(){ q("#mdlBody").innerHTML=filePicker(T.file,"w"); return sleep(400); }).then(function(){ return click("#fpRow"); }).then(function(){ q("#fpRow").classList.add("sel"); return click("#fpOpen"); }).then(function(){ hide("#mdl"); q("#knList").innerHTML='<div class="it"><span class="docx">W</span>'+esc(T.file)+'<span class="pill prog" id="knSt" style="margin-inline-start:auto">In progress</span></div>'; return sleep(1600); }).then(function(){ var p=q("#knSt"); p.className="pill ready"; p.textContent="Ready"; ring("#knSt"); return sleep(500); }); }},
