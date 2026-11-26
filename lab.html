@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="MSRAI_Label_dbd012e0-e600-4c3e-83b7-7d3141c15efc_AI_Disclosure" content="Made with AI">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Lab: From Agent Builder to Copilot Studio · Cathay Workplace Concierge</title>
+<style>
+:root{
+--jade:#005D63; --jade2:#0B7A7F; --jade-l:#E3F0F0; --ink:#1B1B1B; --mut:#616161; --line:#E0E0E0;
+--bg:#F3F5F6; --card:#FFFFFF; --ok:#2E7D32; --ok-l:#E8F5E9; --warn:#8A5A00; --warn-l:#FFF4CE;
+--ms:#0F6CBD; --cs:#5B2EBF; --cs-l:#F1ECFC; --xl:#107C41; --ol:#0F6CBD;
+}
+@media (prefers-color-scheme: dark){ :root{ --bg:#F3F5F6; } }
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button{font-family:inherit}
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:16px;padding:10px 20px;background:var(--jade);color:#fff}
+.topbar h1{font-size:17px;margin:0;font-weight:600}
+.topbar .sub{font-size:13px;opacity:.85}
+.topbar .sp{flex:1}
+.modes{display:flex;background:rgba(255,255,255,.15);border-radius:8px;padding:3px}
+.modes button{border:0;background:transparent;color:#fff;padding:7px 16px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:600}
+.modes button.on{background:#fff;color:var(--jade)}
+/* ================= PRESENTER ================= */
+#present{height:calc(100vh - 54px);display:flex;flex-direction:column}
+#present.hidden,#learn.hidden{display:none}
+#stageWrap{flex:1;position:relative;overflow:hidden;background:#0d2a2c}
+#stage{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0;background:linear-gradient(160deg,#eaf3f3,#f7fafa);overflow:hidden}
+.ctrl{display:flex;align-items:center;gap:10px;padding:8px 16px;background:#0d2a2c;color:#cfe3e3;font-size:13px}
+.ctrl button{background:#1d4a4d;color:#fff;border:0;border-radius:6px;padding:7px 12px;cursor:pointer;font-size:13px}
+.ctrl button:hover{background:#2a6468}
+.ctrl button.on{background:#1aa39a}
+.ctrl select{background:#1d4a4d;color:#fff;border:0;border-radius:6px;padding:6px}
+.ctrl .sp{flex:1}
+.kbd{border:1px solid #4d7c7f;border-radius:4px;padding:0 5px;font-size:11px}
+/* stage chrome */
+.shead{position:absolute;left:0;right:0;top:0;height:70px;display:flex;align-items:center;gap:18px;padding:0 36px}
+.shead .badge{background:var(--jade);color:#fff;font-weight:700;border-radius:8px;padding:6px 14px;font-size:18px}
+.shead .ttl{font-size:28px;font-weight:700;color:var(--jade)}
+.shead .where{margin-left:auto;font-size:16px;color:var(--mut);background:#fff;border:1px solid var(--line);border-radius:20px;padding:6px 14px}
+.shead .time{font-size:16px;color:var(--mut)}
+.winArea{position:absolute;left:36px;right:36px;top:76px;height:648px}
+.capBar{position:absolute;left:36px;right:36px;bottom:20px;height:136px;background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(0,60,60,.12);display:flex;align-items:stretch;overflow:hidden}
+.capNum{width:130px;background:var(--jade);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.capNum b{font-size:44px;line-height:1}
+.capNum span{font-size:14px;opacity:.85;margin-top:4px}
+.capText{flex:1;padding:18px 26px;display:flex;flex-direction:column;justify-content:center}
+.capText .c1{font-size:27px;font-weight:600;line-height:1.25}
+.capText .c2{font-size:18px;color:var(--mut);margin-top:6px}
+.capCopy{width:360px;border-inline-start:1px solid var(--line);padding:14px 18px;font-size:14px;display:none;flex-direction:column;gap:6px;background:#fafcfc}
+.capCopy.show{display:flex}
+.capCopy pre{margin:0;white-space:pre-wrap;font-family:Consolas,monospace;font-size:13px;max-height:74px;overflow:hidden;color:#333}
+.capCopy button{align-self:flex-start;border:1px solid var(--jade);background:#fff;color:var(--jade);border-radius:6px;padding:4px 10px;cursor:pointer;font-weight:600}
+.dots{position:absolute;right:52px;bottom:164px;display:flex;gap:6px}
+.dots i{width:10px;height:10px;border-radius:50%;background:#c4d6d6;display:block}
+.dots i.on{background:var(--jade);width:26px;border-radius:6px}
+.dots i.done{background:#7fb0b0}
+/* browser window */
+.win{position:absolute;inset:0;background:#fff;border-radius:12px;box-shadow:0 14px 40px rgba(0,40,40,.22);overflow:hidden;display:flex;flex-direction:column;transition:opacity .5s, transform .5s}
+.win.off{opacity:0;transform:scale(.96);pointer-events:none}
+.chrome{height:40px;background:#EDEFF1;display:flex;align-items:center;gap:14px;padding:0 14px;border-bottom:1px solid #dcdfe2;flex:none}
+.chrome .d{display:flex;gap:7px}.chrome .d i{width:12px;height:12px;border-radius:50%;background:#ff5f57;display:block}.chrome .d i:nth-child(2){background:#febc2e}.chrome .d i:nth-child(3){background:#28c840}
+.chrome .url{flex:1;max-width:760px;background:#fff;border-radius:16px;padding:5px 14px;font-size:14px;color:#444}
+.appbody{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column}
+/* generic ui atoms */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid #d1d1d1;background:#fff;border-radius:6px;padding:6px 14px;font-size:14px;font-weight:600;color:#242424;white-space:nowrap}
+.btn.pri{background:var(--ms);border-color:var(--ms);color:#fff}
+.btn.cs{background:var(--cs);border-color:var(--cs);color:#fff}
+.btn.ghost{border-color:transparent;background:transparent}
+.fld{border:1px solid #d1d1d1;border-radius:6px;padding:8px 10px;font-size:14px;min-height:36px;background:#fff;white-space:pre-wrap;line-height:1.4;color:#242424}
+.fld.ph:empty::before{content:attr(data-ph);color:#9a9a9a}
+.fld.focus{border-color:var(--ms);box-shadow:0 0 0 1px var(--ms)}
+.fld.tall{min-height:118px}
+.lbl{font-size:14px;font-weight:600;margin:12px 0 5px}
+.hint{font-size:12px;color:var(--mut)}
+.tog{display:inline-block;width:40px;height:20px;border-radius:10px;background:var(--ms);position:relative;vertical-align:middle;transition:background .3s}
+.tog::after{content:"";position:absolute;top:3px;left:23px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .3s}
+.tog.offt{background:#fff;border:1px solid #777}.tog.offt::after{left:3px;top:2px;background:#555}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid #d1d1d1;border-radius:6px;padding:6px 10px;font-size:13px;background:#fff}
+.docx{width:20px;height:22px;border-radius:3px;background:#185ABD;color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.xlsx{background:var(--xl)}
+.pill{font-size:12px;border-radius:10px;padding:2px 8px;background:#eee;color:#555;font-weight:600}
+.pill.ready{background:var(--ok-l);color:var(--ok)}
+.pill.prog{background:var(--warn-l);color:var(--warn)}
+.hide{display:none!important}
+.hl{animation:hl 1.6s ease 1}
+@keyframes hl{0%{box-shadow:0 0 0 0 rgba(255,184,0,.9)}60%{box-shadow:0 0 0 8px rgba(255,184,0,.0)}100%{box-shadow:none}}
+.ring{outline:3px solid #FFB900;outline-offset:3px;border-radius:6px}
+/* M365 Copilot / Agent Builder */
+.m365top{height:48px;display:flex;align-items:center;gap:14px;padding:0 16px;border-bottom:1px solid #eee;flex:none}
+.waffle{display:grid;grid-template-columns:repeat(3,4px);gap:3px}.waffle i{width:4px;height:4px;background:#424242;display:block}
+.m365top b{font-size:16px}
+.m365top .srch{margin:0 auto;width:420px;background:#f5f5f5;border-radius:6px;padding:7px 12px;font-size:13px;color:#777}
+.av{width:30px;height:30px;border-radius:50%;background:var(--jade2);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.m365main{flex:1;display:flex;min-height:0}
+.rail{width:236px;background:#fafafa;border-inline-end:1px solid #eee;padding:14px 10px;font-size:14px;flex:none}
+.ri{padding:8px 10px;border-radius:6px;display:flex;gap:10px;align-items:center;color:#333}
+.ri.sel{background:#e8e8e8;font-weight:600}
+.rh{font-size:12px;color:#777;margin:16px 10px 6px;font-weight:600}
+.cpl{width:22px;height:22px;border-radius:6px;background:conic-gradient(from 200deg,#0F6CBD,#5B2EBF,#E3008C,#FFB900,#0F6CBD);display:inline-block;flex:none}
+.canvas{flex:1;position:relative;min-width:0}
+.home{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.home h2{font-size:28px;margin:0;font-weight:600}
+.homebox{width:640px;border:1px solid #ddd;border-radius:12px;padding:16px;color:#888;font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.builder{position:absolute;inset:0;display:flex;flex-direction:column}
+.bhead{height:56px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid #eee;flex:none}
+.bhead .nm{font-weight:600;font-size:16px}
+.tabs{display:flex;gap:22px;margin-inline-start:24px}
+.tab{font-size:14px;padding:16px 2px;color:#555;border-bottom:3px solid transparent}
+.tab.sel{color:#242424;font-weight:600;border-bottom-color:var(--ms)}
+.bbody{flex:1;display:flex;min-height:0}
+.bform{flex:1.15;overflow:hidden;padding:4px 28px 120px;position:relative}
+.bform .inner{transition:transform .5s}
+.bdesc{flex:1.15;padding:30px;display:flex;flex-direction:column;gap:12px}
+.bubble{background:#f5f5f5;border-radius:10px;padding:12px 14px;font-size:14px;max-width:90%}
+.bprev{flex:1;border-inline-start:1px solid #eee;background:#fbfbfb;display:flex;flex-direction:column;min-width:0}
+.pvh{padding:14px 18px;font-size:13px;color:#666;border-bottom:1px solid #eee;display:flex;justify-content:space-between}
+.pvbody{flex:1;overflow:hidden;padding:16px;display:flex;flex-direction:column;gap:10px}
+.pvid{display:flex;flex-direction:column;align-items:center;gap:6px;margin:10px 0}
+.agico{width:52px;height:52px;border-radius:12px;background:var(--jade);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:20px}
+.starters{display:flex;flex-direction:column;gap:8px}
+.starter{border:1px solid #ddd;background:#fff;border-radius:8px;padding:8px 12px;font-size:13px}
+.msgs{display:flex;flex-direction:column;gap:10px;overflow:hidden;justify-content:flex-end;flex:1}
+.mu{align-self:flex-end;background:#E8EBFA;border-radius:10px;padding:9px 13px;font-size:14px;max-width:85%}
+.ma{align-self:flex-start;background:#fff;border:1px solid #e6e6e6;border-radius:10px;padding:10px 14px;font-size:14px;max-width:92%;line-height:1.45}
+.ma ul{margin:4px 0;padding-inline-start:18px}
+.ma .src{font-size:12px;color:var(--mut);margin-top:6px;display:flex;align-items:center;gap:6px}
+.typing{display:inline-flex;gap:4px}.typing i{width:7px;height:7px;border-radius:50%;background:#999;display:block;animation:bl 1s infinite}.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,100%{opacity:.25}50%{opacity:1}}
+.pvin{margin:10px 16px 16px;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:14px;color:#888;background:#fff;min-height:42px}
+.pvin.focus{border-color:var(--ms);color:#242424}
+.menu{position:absolute;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.16);padding:6px;font-size:14px;z-index:5;width:240px}
+.menu div{padding:8px 12px;border-radius:5px}
+.menu div.hov{background:#f0f0f0}
+.modalBg{position:absolute;inset:0;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;z-index:8}
+.modal{background:#fff;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.3);padding:24px;width:560px;font-size:14px}
+.modal h3{margin:0 0 12px;font-size:20px}
+.filepick .row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:6px}
+.filepick .row.sel{background:#E8EBFA}
+/* Copilot Studio */
+.cstop{height:48px;display:flex;align-items:center;gap:12px;padding:0 16px;background:#fff;border-bottom:1px solid #eee;flex:none}
+.cstop b{font-size:16px}
+.cstop .env{margin-inline-start:auto;font-size:12px;color:#666;border:1px solid #ddd;border-radius:6px;padding:4px 10px}
+.csmain{flex:1;display:flex;min-height:0}
+.csrail{width:64px;background:#f7f7f9;border-inline-end:1px solid #eee;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:12px;font-size:10px;color:#555;flex:none}
+.csrail div{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;width:56px;border-radius:6px}
+.csrail div.sel{background:#ebe6fa;color:var(--cs);font-weight:700}
+.csrail span{font-size:18px}
+.cswork{flex:1;display:flex;flex-direction:column;min-width:0}
+.csagent{height:58px;display:flex;align-items:center;gap:12px;padding:0 22px;flex:none}
+.csagent .nm{font-size:18px;font-weight:600}
+.csagent .acts{margin-inline-start:auto;display:flex;gap:8px}
+.cstabs{display:flex;gap:24px;padding:0 22px;border-bottom:1px solid #eee;flex:none}
+.cstab{font-size:14px;padding:10px 2px;color:#555;border-bottom:3px solid transparent}
+.cstab.sel{color:var(--cs);font-weight:700;border-bottom-color:var(--cs)}
+.cspane{flex:1;overflow:hidden;padding:18px 22px;position:relative;background:#fafafa}
+.cscard{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.cscard h4{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:10px}
+.cscard h4 .btn{margin-inline-start:auto}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:14px}
+.kv .k{color:var(--mut)}
+.instr{font-size:13.5px;white-space:pre-wrap;line-height:1.45;background:#fff;border:1px solid transparent;border-radius:6px;padding:4px 6px}
+.instr.edit{border-color:var(--cs);box-shadow:0 0 0 1px var(--cs)}
+.instr .new{background:#FFF4CE}
+.cstest{width:380px;border-inline-start:1px solid #eee;display:flex;flex-direction:column;background:#fff;flex:none;transition:width .4s}
+.cstest.closed{width:0;overflow:hidden;border:0}
+.cstest .pvh{font-weight:600;color:#333}
+.empty{border:1px dashed #cfcfcf;border-radius:8px;padding:16px;color:#777;font-size:13px;text-align:center}
+.list .it{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid #eee;border-radius:8px;background:#fff;margin-bottom:8px;font-size:14px}
+.list .it.sel{border-color:var(--cs);background:var(--cs-l)}
+.conn{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex:none}
+.conn.x{background:var(--xl)}.conn.o{background:var(--ol)}
+.tcard{border:1px solid #d9d2f0;background:#faf8ff;border-radius:8px;padding:10px 12px;font-size:13px;margin-top:6px}
+.tcard .kv{grid-template-columns:90px 1fr;font-size:13px}
+.act{font-size:12px;color:var(--cs);background:var(--cs-l);border-radius:6px;padding:5px 9px;align-self:flex-start;display:flex;gap:6px;align-items:center}
+.inrow{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid #f1f1f1;font-size:14px}
+.inrow .fld{min-height:32px;padding:5px 10px}
+.ai{color:var(--cs);font-size:13px;display:flex;align-items:center;gap:6px}
+/* Excel & Outlook */
+.xlgrid{border-collapse:collapse;font-size:14px;width:100%}
+.xlgrid th{background:var(--xl);color:#fff;text-align:start;padding:8px 10px;font-weight:600}
+.xlgrid td{border:1px solid #e3e3e3;padding:8px 10px}
+.xlgrid tr.newrow td{background:#E9F6EE;animation:hl 1.6s 1}
+.prioH{color:#B10E1C;font-weight:700}
+.olist .m{padding:12px 16px;border-bottom:1px solid #eee;font-size:14px}
+.olist .m.newm{background:#EAF3FC;border-inline-start:4px solid var(--ol)}
+.olist .m b{display:block}
+/* overlays */
+#cursor{position:absolute;left:800px;top:450px;width:26px;height:26px;z-index:40;pointer-events:none;transition:left .7s cubic-bezier(.4,.1,.2,1),top .7s cubic-bezier(.4,.1,.2,1)}
+#cursor svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+.rip{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:3px solid #FFB900;z-index:39;pointer-events:none;animation:rip .6s ease-out forwards}
+@keyframes rip{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
+.toast{position:absolute;left:50%;top:96px;transform:translateX(-50%);background:#242424;color:#fff;border-radius:8px;padding:10px 18px;font-size:16px;z-index:30;box-shadow:0 8px 20px rgba(0,0,0,.25);animation:fade 2.6s forwards}
+@keyframes fade{0%{opacity:0;transform:translate(-50%,-8px)}10%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+.callout{position:absolute;z-index:31;background:var(--ok-l);border:2px solid var(--ok);color:#1b4d1e;border-radius:12px;padding:14px 20px;font-size:20px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.18);animation:pop .4s ease}
+.callout.tip{background:var(--warn-l);border-color:#C19C00;color:#5a4300}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.paste{position:absolute;z-index:32;background:var(--ink);color:#fff;border-radius:6px;padding:4px 10px;font-size:14px;font-weight:600;animation:fade 1.4s forwards}
+/* title & overview scenes */
+.hero{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
+.hero .k{font-size:22px;color:var(--jade2);font-weight:600;letter-spacing:.5px}
+.hero h2{font-size:64px;margin:0;color:var(--jade);line-height:1.1}
+.hero p{font-size:24px;color:#3E6E73;margin:0}
+.flow{display:flex;gap:28px;align-items:stretch;margin-top:30px}
+.fstep{width:290px;background:#fff;border-radius:14px;box-shadow:0 8px 24px rgba(0,60,60,.12);overflow:hidden;opacity:0;transform:translateY(24px);transition:all .6s}
+.fstep.in{opacity:1;transform:none}
+.fstep .h{background:var(--jade);color:#fff;padding:14px;font-size:16px}
+.fstep .h b{display:block;font-size:30px;letter-spacing:1px}
+.fstep.ab .h{background:#3D8F93}
+.fstep ul{list-style:none;margin:0;padding:16px;font-size:18px;line-height:1.8}
+.fstep .ok{margin:0 16px 16px;background:var(--ok-l);color:var(--ok);border:1px solid #9ccc9f;border-radius:8px;padding:10px;font-weight:700;font-size:16px}
+.zone{display:flex;gap:28px;width:1240px}
+.zone div{border-radius:10px;padding:10px;font-weight:700;font-size:18px;text-align:center;opacity:0;transition:opacity .6s}
+.zone div.in{opacity:1}
+.tag{font-size:40px;font-weight:700;color:var(--jade);opacity:0;transition:opacity .8s;margin-top:28px}
+.tag.in{opacity:1}
+.need{display:flex;gap:14px;margin-top:10px;opacity:0;transition:opacity .6s}
+.need.in{opacity:1}
+.need .chip{font-size:17px;padding:10px 16px}
+/* teams */
+.tm{display:flex;flex:1}
+.tmrail{width:68px;background:#EBEBEB;display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:14px;font-size:11px;color:#555}
+.tmrail .ti{display:flex;flex-direction:column;align-items:center}
+.tmrail .ti.sel{color:#5B5FC7;font-weight:700}
+/* ================= LEARNER ================= */
+#learn{max-width:980px;margin:0 auto;padding:26px 22px 80px}
+.lhero{background:#fff;border-radius:14px;padding:24px 28px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:18px}
+.lhero h2{margin:0 0 4px;color:var(--jade);font-size:30px}
+.lhero .meta{color:#3E6E73;font-style:italic}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.toc a{background:var(--jade-l);color:var(--jade);text-decoration:none;border-radius:16px;padding:6px 14px;font-size:14px;font-weight:600}
+.lsec{background:#fff;border-radius:14px;padding:22px 28px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:18px}
+.lsec h3{margin:0 0 4px;color:var(--jade);font-size:22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lsec h3 .min{font-size:13px;background:var(--jade-l);border-radius:12px;padding:3px 10px;font-weight:600}
+.lsec h3 .wh{font-size:13px;color:var(--mut);font-weight:400;margin-inline-start:auto}
+.lsec h3 button{font-size:13px;border:1px solid var(--jade);background:#fff;color:var(--jade);border-radius:6px;padding:4px 10px;cursor:pointer;font-weight:600}
+ol.steps{padding-inline-start:0;list-style:none;counter-reset:s;margin:14px 0 0}
+ol.steps>li{counter-increment:s;position:relative;padding:8px 0 10px 44px;border-bottom:1px solid #f0f0f0;line-height:1.5}
+ol.steps>li::before{content:counter(s);position:absolute;inset-inline-start:0;top:8px;width:28px;height:28px;border-radius:50%;background:var(--jade);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+ol.steps>li label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.cbox{position:relative;margin:4px 0 2px;border:1px solid #cfe0e0;border-radius:8px;background:#F6FAFA}
+.cbox pre{margin:0;padding:12px 90px 12px 14px;white-space:pre-wrap;font-family:Consolas,"Cascadia Mono",monospace;font-size:14px;line-height:1.5}
+.cbox button{position:absolute;top:8px;inset-inline-end:8px;border:1px solid var(--jade);background:#fff;color:var(--jade);border-radius:6px;padding:4px 10px;font-size:13px;cursor:pointer;font-weight:600}
+.cbox button.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.check{margin-top:14px;background:var(--ok-l);border-inline-start:4px solid var(--ok);border-radius:8px;padding:10px 14px}
+.tipb{margin-top:10px;background:var(--warn-l);border-inline-start:4px solid #C19C00;border-radius:8px;padding:10px 14px}
+.ltable{width:100%;border-collapse:collapse;margin-top:10px;font-size:15px}
+.ltable th{background:var(--jade);color:#fff;text-align:start;padding:9px 12px}
+.ltable td{padding:9px 12px;border-bottom:1px solid #eee;vertical-align:top}
+.tbl4{display:grid;grid-template-columns:170px 1fr;gap:0;margin-top:6px}
+.prog{height:6px;background:#e3eded;border-radius:3px;margin-top:12px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--jade);transition:width .3s}
+@media print{.topbar,#present{display:none!important}#learn{display:block!important}.cbox button,.lsec h3 button{display:none}}
+</style>
+</head>
+<body>
+<div class="topbar">
+<div><h1>From Agent Builder to Copilot Studio</h1><div class="sub">Cathay Workplace Concierge · MS-4022 · 3 December 2026</div></div>
+<div class="sp"></div>
+<div class="modes"><button id="mPresent" class="on" type="button">▶ Presenter walkthrough</button><button id="mLearn" type="button">📋 Learner guide</button></div>
+</div>
+
+<!-- ============ PRESENTER ============ -->
+<section id="present">
+<div id="stageWrap"><div id="stage">
+<div class="shead"><span class="badge" id="sBadge"></span><span class="ttl" id="sTitle"></span><span class="time" id="sTime"></span><span class="where" id="sWhere"></span></div>
+<div class="winArea" id="winArea"></div>
+<div class="dots" id="dots"></div>
+<div class="capBar"><div class="capNum"><b id="capN">1</b><span id="capOf">of 1</span></div><div class="capText"><div class="c1" id="cap1"></div><div class="c2" id="cap2"></div></div><div class="capCopy" id="capCopy"><b>Paste this</b><pre id="capPre"></pre><button type="button" id="capBtn">Copy</button></div></div>
+<div id="cursor"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M4 2l16 9.5-7 1.6-3.6 6.9z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+</div></div>
+<div class="ctrl">
+<select id="sceneSel" aria-label="Jump to section"></select>
+<button type="button" id="bPrev">◀ Back</button>
+<button type="button" id="bReplay">↻ Replay step</button>
+<button type="button" id="bNext">Next ▶</button>
+<button type="button" id="bAuto">⏵ Auto-play</button>
+<span>Speed</span><select id="speed"><option value="0.7">Slow</option><option value="1" selected>Normal</option><option value="1.6">Fast</option></select>
+<div class="sp"></div>
+<span><span class="kbd">→</span>/<span class="kbd">Space</span> next · <span class="kbd">←</span> back · <span class="kbd">R</span> replay · <span class="kbd">A</span> auto · <span class="kbd">F</span> full screen</span>
+</div>
+</section>
+
+<!-- ============ LEARNER ============ -->
+<section id="learn" class="hidden">
+<div class="lhero">
+<h2>Lab: From Agent Builder to Copilot Studio</h2>
+<div class="meta">Cathay Workplace Concierge · MS-4022 · 3 December 2026</div>
+<p><b>You need:</b> your lab account, <b>Cathay Workplace Policies (Sample).docx</b> and <b>Workplace Requests Tracker.xlsx</b>. You don't need SharePoint.</p>
+<p style="margin:0"><b>Step 1 Answer</b> (Agent Builder) → <b>Step 2 Move</b> → <b>Step 3 Record</b> → <b>Step 4 Act</b> (Copilot Studio). Tick each step as you go — your progress is kept in this browser.</p>
+<div class="prog"><i id="progBar"></i></div>
+<div class="toc"><a href="#ex1">Exercise 1 · Build</a><a href="#ex2">Exercise 2 · Copy</a><a href="#ex3">Exercise 3 · Excel</a><a href="#ex4">Exercise 4 · Outlook</a><a href="#wrap">Wrap-up</a><a href="#fix">If something goes wrong</a></div>
+</div>
+
+<div class="lsec" id="ex1"><h3>Exercise 1: Build the agent in Agent Builder <span class="min">35 min</span><span class="wh">in Agent Builder</span><button type="button" data-watch="1">▶ Watch</button></h3>
+<ol class="steps">
+<li><label><input type="checkbox"> <span>Open <b>Microsoft 365 Copilot</b> and select <b>Create agent</b>, then <b>Configure</b>.</span></label></li>
+<li><label><input type="checkbox"> <span><b>Name:</b></span></label><div class="cbox"><pre>Cathay Workplace Concierge</pre><button type="button">Copy</button></div></li>
+<li><label><input type="checkbox"> <span><b>Description:</b></span></label><div class="cbox"><pre>Answers questions about hybrid work, rooms, travel and facilities.</pre><button type="button">Copy</button></div></li>
+<li><label><input type="checkbox"> <span><b>Instructions:</b> paste this:</span></label><div class="cbox"><pre id="instr1"></pre><button type="button">Copy</button></div></li>
+<li><label><input type="checkbox"> <span><b>Knowledge:</b> select <b>Upload</b> and add <b>Cathay Workplace Policies (Sample).docx</b>. Turn off web search.</span></label></li>
+<li><label><input type="checkbox"> <span><b>Starter prompts:</b> add these two:</span></label><div class="cbox"><pre>How many days a week must I be in the office?</pre><button type="button">Copy</button></div><div class="cbox"><pre>What is the hotel limit in London?</pre><button type="button">Copy</button></div></li>
+<li><label><input type="checkbox"> <span>Test both prompts, then select <b>Create</b>.</span></label></li>
+</ol>
+<div class="check">✅ <b>Check:</b> the agent answers 3 days and GBP 220, and names the policy.</div>
+</div>
+
+<div class="lsec" id="ex2"><h3>Exercise 2: Copy it to Copilot Studio <span class="min">20 min</span><span class="wh">Agent Builder → Copilot Studio</span><button type="button" data-watch="2">▶ Watch</button></h3>
+<ol class="steps">
+<li><label><input type="checkbox"> <span>Open your agent in edit mode.</span></label></li>
+<li><label><input type="checkbox"> <span>Select <b>… (More options)</b>, then <b>Copy to Copilot Studio</b>. Select it once only.</span></label></li>
+<li><label><input type="checkbox"> <span>In Copilot Studio, select <b>Save</b>.</span></label></li>
+<li><label><input type="checkbox"> <span>Go to <b>Knowledge</b>, select <b>Add knowledge</b>, then <b>Upload file</b>, and add the policy file again.</span></label></li>
+<li><label><input type="checkbox"> <span>Test with:</span></label><div class="cbox"><pre>What is the hotel limit in London?</pre><button type="button">Copy</button></div></li>
+</ol>
+<div class="tipb">💡 <b>Why upload again?</b> Your name, instructions and prompts copy across, but uploaded files don't.</div>
+<div class="check">✅ <b>Check:</b> it answers the same way it did in Agent Builder.</div>
+</div>
+
+<div class="lsec" id="ex3"><h3>Exercise 3: Log tickets in Excel (Excel tool) <span class="min">35 min</span><span class="wh">in Copilot Studio</span><button type="button" data-watch="3">▶ Watch</button></h3>
+<ol class="steps">
+<li><label><input type="checkbox"> <span>Go to <b>Tools</b>, select <b>Add a tool</b>, search <b>Excel</b>, then pick <b>Add a row into a table</b>.</span></label></li>
+<li><label><input type="checkbox"> <span><b>Connect:</b> sign in, select <b>Add</b>, and rename the tool to:</span></label><div class="cbox"><pre>Log Workplace Request</pre><button type="button">Copy</button></div></li>
+<li><label><input type="checkbox"> <span>Save <b>Workplace Requests Tracker.xlsx</b> to your <b>OneDrive</b> (My files). Then set these 4 boxes:</span></label>
+<div class="cbox"><pre>Location:          OneDrive for Business
+Document Library:  OneDrive
+File:              Workplace Requests Tracker.xlsx
+Table:             Requests</pre><button type="button">Copy</button></div></li>
+<li><label><input type="checkbox"> <span>Leave <b>the 6 columns</b> (Title, Category, Priority, Location, Description, Status) on <i>Dynamically fill with AI.</i></span></label></li>
+<li><label><input type="checkbox"> <span>Select <b>Save</b>. Leave <b>Ask user before running</b> OFF.</span></label></li>
+<li><label><input type="checkbox"> <span>Add these lines to the end of the agent's instructions:</span></label><div class="cbox"><pre id="instr3"></pre><button type="button">Copy</button></div></li>
+</ol>
+<div class="check">✅ <b>Check:</b> type <i>The 2F door card reader is broken</i>, then reply Yes. A new row appears in Excel with <b>Priority: High</b>.
+<div class="cbox" style="margin-top:8px"><pre>The 2F door card reader is broken</pre><button type="button">Copy</button></div></div>
+</div>
+
+<div class="lsec" id="ex4"><h3>Exercise 4: Send the ticket by email (Outlook tool) <span class="min">30 min</span><span class="wh">in Copilot Studio</span><button type="button" data-watch="4">▶ Watch</button></h3>
+<ol class="steps">
+<li><label><input type="checkbox"> <span>Go to <b>Tools</b>, select <b>Add a tool</b>, and search for <b>Send an email (V2)</b> (Office 365 Outlook).</span></label></li>
+<li><label><input type="checkbox"> <span>Sign in to create the connection, then select <b>Add</b>.</span></label></li>
+<li><label><input type="checkbox"> <span><b>Rename</b> the tool to:</span></label><div class="cbox"><pre>Send Workplace Request</pre><button type="button">Copy</button></div></li>
+<li><label><input type="checkbox"> <span>Set <b>To</b> to <b>your own email</b>. Leave <b>Subject</b> and <b>Body</b> to Fill with AI (Subject = ticket Title, Body = the full ticket).</span></label></li>
+<li><label><input type="checkbox"> <span>Leave <b>Ask user before running</b> OFF (the agent already shows the ticket first), then select <b>Save</b>.</span></label></li>
+<li><label><input type="checkbox"> <span>Add this line to the end of the instructions:</span></label><div class="cbox"><pre id="instr4"></pre><button type="button">Copy</button></div></li>
+<li><label><input type="checkbox"> <span>Test with the prompt below. Then reply <b>Yes</b>.</span></label><div class="cbox"><pre>The 6F pantry water dispenser is leaking.</pre><button type="button">Copy</button></div></li>
+</ol>
+<div class="check">✅ <b>Check:</b> the email arrives in your inbox and a new row appears in Excel.</div>
+</div>
+
+<div class="lsec" id="wrap"><h3>Wrap-up <span class="min">30 min</span><button type="button" data-watch="5">▶ Watch</button></h3>
+<ul style="line-height:1.8;font-size:16px">
+<li><b>Agent Builder answers. Copilot Studio acts.</b></li>
+<li>What you build in Agent Builder today can move to Copilot Studio later.</li>
+<li>Trainer demo: <b>Publish</b>, then <b>Channels</b>, then <b>Teams and Microsoft 365 Copilot</b>.</li>
+</ul>
+</div>
+
+<div class="lsec" id="fix"><h3>If something goes wrong</h3>
+<table class="ltable"><tr><th>Problem</th><th>Fix</th></tr>
+<tr><td>No Upload option</td><td>Paste the policy text into the instructions</td></tr>
+<tr><td>Agent answers from the web</td><td>Turn off web search</td></tr>
+<tr><td>Copilot Studio doesn't know the answer</td><td>Upload the file again and wait until it says <b>Ready</b></td></tr>
+<tr><td>Two copies of the agent</td><td>Delete the extra one</td></tr>
+<tr><td>No Excel or Outlook tool, or the Requests table isn't listed</td><td>Check the tracker is in your OneDrive. If the tool is blocked, the trainer demos Exercise 3 or 4</td></tr>
+</table>
+</div>
+<p class="hint" style="text-align:center">Screens in the walkthrough are simplified recreations of the Microsoft 365 Copilot and Copilot Studio interfaces; labels in your tenant may differ slightly.</p>
+</section>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ---------- lab text (single source) ---------- */
+var T={
+name:"Cathay Workplace Concierge",
+desc:"Answers questions about hybrid work, rooms, travel and facilities.",
+instr:"You are Cathay Workplace Concierge. Help employees with hybrid work,\nmeeting rooms, duty travel and facilities.\n- Answer only from the policy file. Name the policy you used.\n- If the answer is not in the file, say so. Never guess.\n- Keep answers short, using bullet points.",
+p1:"How many days a week must I be in the office?",
+p2:"What is the hotel limit in London?",
+file:"Cathay Workplace Policies (Sample).docx",
+tracker:"Workplace Requests Tracker.xlsx",
+instr3:"When someone reports a problem, show a ticket: Title, Category, Priority\n(High if safety or door access), Location, Description, Status = New.\nAsk them to confirm. On Yes, use Log Workplace Request.",
+instr4:"On Yes, also use Send Workplace Request to email the ticket.\nThen say: \"Sent. The Workplace team will follow up.\"",
+t3:"The 2F door card reader is broken",
+t4:"The 6F pantry water dispenser is leaking."
+};
+$("#instr1").textContent=T.instr; $("#instr3").textContent=T.instr3; $("#instr4").textContent=T.instr4;
+
+/* ---------- copy helper ---------- */
+function copyText(txt,btn){
+function ok(){ if(!btn)return; var o=btn.textContent; btn.textContent="Copied ✓"; btn.classList.add("done"); setTimeout(function(){btn.textContent=o;btn.classList.remove("done")},1400); }
+function fb(){ var ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(ta); ok(); }
+if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok,fb);} else fb();
+}
+$$(".cbox button").forEach(function(b){ b.addEventListener("click",function(){ copyText(b.parentNode.querySelector("pre").textContent,b); }); });
+$("#capBtn").addEventListener("click",function(){ copyText($("#capPre").textContent,$("#capBtn")); });
+
+/* ---------- learner progress ---------- */
+var boxes=$$("#learn input[type=checkbox]");
+var saved={}; try{ saved=JSON.parse(localStorage.getItem("cxlab")||"{}"); }catch(e){}
+function prog(){ var n=boxes.filter(function(b){return b.checked}).length; $("#progBar").style.width=(100*n/boxes.length)+"%"; }
+boxes.forEach(function(b,i){ b.checked=!!saved[i]; b.addEventListener("change",function(){ saved[i]=b.checked; try{localStorage.setItem("cxlab",JSON.stringify(saved));}catch(e){} prog(); }); });
+prog();
+
+/* ---------- mode switch ---------- */
+function mode(m){ $("#present").classList.toggle("hidden",m!=="p"); $("#learn").classList.toggle("hidden",m!=="l"); $("#mPresent").classList.toggle("on",m==="p"); $("#mLearn").classList.toggle("on",m==="l"); if(m==="p"){fit();} else {stopAll();} }
+$("#mPresent").addEventListener("click",function(){mode("p")});
+$("#mLearn").addEventListener("click",function(){mode("l")});
+$$("[data-watch]").forEach(function(b){ b.addEventListener("click",function(){ mode("p"); go(+b.getAttribute("data-watch"),0); }); });
+
+/* ---------- stage scaling ---------- */
+var stage=$("#stage"), wrap=$("#stageWrap"), S={scale:1,instant:false,token:0,speed:1,auto:false,scene:0,step:0,busy:false};
+function fit(){ var w=wrap.clientWidth,h=wrap.clientHeight; if(!w||!h)return; var s=Math.min(w/1600,h/900); S.scale=s; stage.style.transform="scale("+s+")"; stage.style.left=((w-1600*s)/2)+"px"; stage.style.top=((h-900*s)/2)+"px"; }
+window.addEventListener("resize",fit);
+
+/* ---------- animation primitives ---------- */
+function Cancel(){}
+function sleep(ms){ if(S.instant) return Promise.resolve(); var t=S.token; return new Promise(function(res,rej){ setTimeout(function(){ t===S.token?res():rej(new Cancel()); }, ms/S.speed); }); }
+function q(sel){ return typeof sel==="string"? $(sel,stage) : sel; }
+function pos(el){ var r=el.getBoundingClientRect(), sr=stage.getBoundingClientRect(); return {x:(r.left-sr.left)/S.scale, y:(r.top-sr.top)/S.scale, w:r.width/S.scale, h:r.height/S.scale}; }
+var cur=$("#cursor");
+function moveTo(sel,dx,dy){ var el=q(sel); if(!el) return Promise.resolve(); var p=pos(el); var x=p.x+(dx==null?Math.min(p.w/2,60):dx), y=p.y+(dy==null?p.h/2:dy);
+if(S.instant){ cur.style.transition="none"; cur.style.left=x+"px"; cur.style.top=y+"px"; void cur.offsetWidth; cur.style.transition=""; return Promise.resolve(); }
+cur.style.transitionDuration=(0.7/S.speed)+"s"; cur.style.left=x+"px"; cur.style.top=y+"px"; return sleep(780); }
+function click(sel,dx,dy){ return moveTo(sel,dx,dy).then(function(){ if(S.instant) return; var r=document.createElement("div"); r.className="rip"; r.style.left=(parseFloat(cur.style.left))+"px"; r.style.top=(parseFloat(cur.style.top))+"px"; stage.appendChild(r); setTimeout(function(){r.remove()},700); return sleep(280); }); }
+function scrollTo(sel,box){ var el=q(sel), b=q(box); if(!el||!b) return Promise.resolve(); var inner=b.firstElementChild; var target=Math.max(0, el.offsetTop - 120); inner.style.transition=S.instant?"none":""; inner.style.transform="translateY(-"+target+"px)"; return sleep(550); }
+function type(sel,text,opt){ opt=opt||{}; var el=q(sel); $$(".focus",stage).forEach(function(f){f.classList.remove("focus")}); el.classList.add("focus");
+var base=opt.append? el.innerHTML : ""; if(!opt.append) el.textContent="";
+if(S.instant){ if(opt.append){ el.innerHTML=base+'<span class="new"></span>'; el.lastChild.textContent=text; } else el.textContent=text; el.classList.remove("focus"); return Promise.resolve(); }
+var span=el; if(opt.append){ el.innerHTML=base+'<span class="new"></span>'; span=el.lastChild; }
+if(opt.paste){ var p=pos(el); var b=document.createElement("div"); b.className="paste"; b.textContent="Ctrl + V"; b.style.left=(p.x+p.w-110)+"px"; b.style.top=(p.y-30)+"px"; stage.appendChild(b); setTimeout(function(){b.remove()},1500);
+return sleep(450).then(function(){ span.textContent=text; return sleep(600); }).then(function(){el.classList.remove("focus")}); }
+var i=0, step=Math.max(1,Math.round(text.length/45));
+function tick(){ if(i>=text.length){ el.classList.remove("focus"); return Promise.resolve(); } i=Math.min(text.length,i+step); span.textContent=text.slice(0,i); return sleep(38).then(tick); }
+return tick();
+}
+function show(sel){ var el=q(sel); if(el) el.classList.remove("hide"); }
+function hide(sel){ var el=q(sel); if(el) el.classList.add("hide"); }
+function toast(msg){ if(S.instant) return; var t=document.createElement("div"); t.className="toast"; t.textContent=msg; stage.appendChild(t); setTimeout(function(){t.remove()},2700); }
+function callout(html,x,y,tip,w){ var c=document.createElement("div"); c.className="callout"+(tip?" tip":""); c.innerHTML=html; c.style.left=x+"px"; c.style.top=y+"px"; if(w)c.style.width=w+"px"; c.setAttribute("data-tmp","1"); stage.appendChild(c); return sleep(400); }
+function ring(sel){ var el=q(sel); if(el){ el.classList.add("ring"); } }
+function clearRings(){ $$(".ring",stage).forEach(function(e){e.classList.remove("ring")}); }
+function msg(box,who,html){ var m=document.createElement("div"); m.className=who==="u"?"mu":"ma"; m.innerHTML=html; q(box).appendChild(m); return m; }
+function reply(box,html,think){ var m=msg(box,"a",'<span class="typing"><i></i><i></i><i></i></span>'); return sleep(think||1300).then(function(){ m.innerHTML=html; return sleep(500); }); }
+function tab(group,sel){ $$(group,stage).forEach(function(t){t.classList.remove("sel")}); q(sel).classList.add("sel"); }
+function view(group,id){ $$(group,stage).forEach(function(v){v.classList.add("hide")}); show(id); }
+function win(id){ $$(".win",stage).forEach(function(w){w.classList.add("off")}); q(id).classList.remove("off"); return sleep(500); }
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* ---------- UI templates ---------- */
+function chrome(url){ return '<div class="chrome"><div class="d"><i></i><i></i><i></i></div><div class="url">🔒 '+url+'</div></div>'; }
+var AG='<div class="agico">CW</div>';
+function abWin(id,edit){ return '<div class="win" id="'+id+'">'+chrome("m365.cloud.microsoft/chat")+'<div class="appbody">'+
+'<div class="m365top"><div class="waffle">'+'<i></i>'.repeat(9)+'</div><b>Microsoft 365 Copilot</b><div class="srch">🔍 Search</div><div class="av">LA</div></div>'+
+'<div class="m365main"><div class="rail"><div class="ri"><span class="cpl"></span> Copilot</div><div class="ri">💬 Chat</div><div class="ri">📄 Pages</div><div class="ri">🗂 Notebooks</div><div class="rh">Agents</div><div class="ri">🔎 Researcher</div><div class="ri">📊 Analyst</div>'+(edit?'<div class="ri sel">'+'<span class="agico" style="width:22px;height:22px;font-size:9px;border-radius:5px">CW</span> Cathay Workplace Concierge</div>':'')+'<div class="ri" id="abCreate">＋ Create agent</div></div>'+
+'<div class="canvas">'+
+'<div class="home'+(edit?' hide':'')+'" id="abHome"><span class="cpl" style="width:46px;height:46px;border-radius:12px"></span><h2>Hi Lab Learner, how can I help?</h2><div class="homebox">Message Copilot</div></div>'+
+'<div class="builder'+(edit?'':' hide')+'" id="abBuilder"><div class="bhead"><span class="nm" id="abHeadNm">'+(edit?'Edit agent':'New agent')+'</span><div class="tabs"><span class="tab'+(edit?'':' sel')+'" id="abTabD">Describe</span><span class="tab'+(edit?' sel':'')+'" id="abTabC">Configure</span></div><div style="margin-inline-start:auto;display:flex;gap:8px;position:relative"><span class="btn ghost" id="abMore">… </span><span class="btn pri" id="abCreateBtn">'+(edit?'Update':'Create')+'</span></div></div>'+
+'<div class="bbody"><div class="bdesc'+(edit?' hide':'')+'" id="abDesc"><div class="bubble">Hi! I\'ll help you build a new agent. You can describe what it should do, or switch to <b>Configure</b> to set it up yourself.</div><div class="pvin" style="margin:auto 0 0">Describe your agent…</div></div>'+
+'<div class="bform'+(edit?'':' hide')+'" id="abForm"><div class="inner">'+
+'<div class="lbl">Name</div><div class="fld ph" data-ph="Name your agent" id="fName">'+(edit?esc(T.name):'')+'</div>'+
+'<div class="lbl">Description</div><div class="fld ph" data-ph="Describe what your agent does" id="fDesc">'+(edit?esc(T.desc):'')+'</div>'+
+'<div class="lbl">Instructions</div><div class="fld ph tall" data-ph="Give your agent instructions" id="fInstr">'+(edit?esc(T.instr):'')+'</div>'+
+'<div class="lbl">Knowledge</div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap" id="kRow"><span class="btn" id="kUpload">⤒ Upload</span><span class="btn">Add sources</span><span class="chip'+(edit?'':' hide')+'" id="kFile"><span class="docx">W</span>'+esc(T.file)+' <span class="pill ready">Ready</span></span></div>'+
+'<div style="display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px" id="webRow"><span class="tog'+(edit?' offt':'')+'" id="webTog"></span> Search all websites <span class="hint">(web search)</span></div>'+
+'<div class="lbl">Starter prompts</div><div class="fld ph" data-ph="Title / message" id="sp1">'+(edit?esc(T.p1):'')+'</div><div style="height:8px"></div><div class="fld ph" data-ph="Title / message" id="sp2">'+(edit?esc(T.p2):'')+'</div>'+
+'</div></div>'+
+'<div class="bprev"><div class="pvh"><span>Preview</span><span>↻</span></div><div class="pvbody"><div class="pvid">'+AG+'<b id="pvName">'+(edit?esc(T.name):'New agent')+'</b></div><div class="starters" id="pvStart">'+(edit?'<div class="starter">'+esc(T.p1)+'</div><div class="starter">'+esc(T.p2)+'</div>':'')+'</div><div class="msgs" id="pvMsgs"></div></div><div class="pvin" id="pvIn">Ask a question</div></div>'+
+'</div>'+
+'<div class="menu hide" id="abMenu" style="right:110px;top:50px"><div>⚙ Settings</div><div id="mCopy">⧉ Copy to Copilot Studio</div><div>↗ Share</div><div>🗑 Delete agent</div></div>'+
+'</div>'+
+'</div></div></div></div>'; }
+
+function csWin(id,st){ st=st||{};
+var tools=(st.tools||[]).map(function(t){return '<div class="it"><span class="conn '+t[0]+'">'+(t[0]==="x"?"X":"O")+'</span><div><b>'+t[1]+'</b><div class="hint">'+t[2]+'</div></div><span class="pill ready" style="margin-inline-start:auto">On</span></div>';}).join("");
+var instr=esc(T.instr)+(st.i3?"\n"+'<span>'+esc(T.instr3)+'</span>':"")+(st.i4?"\n"+esc(T.instr4):"");
+return '<div class="win" id="'+id+'">'+chrome("copilotstudio.microsoft.com/environments/…/bots/cathay-workplace-concierge")+'<div class="appbody">'+
+'<div class="cstop"><span class="cpl"></span><b>Copilot Studio</b><span class="env">Environment: Cathay Lab Sandbox</span><div class="av">LA</div></div>'+
+'<div class="csmain"><div class="csrail"><div><span>⌂</span>Home</div><div><span>＋</span>Create</div><div class="sel"><span>🤖</span>Agents</div><div><span>⚡</span>Flows</div><div><span>🔧</span>Tools</div><div><span>⋯</span>More</div></div>'+
+'<div class="cswork"><div class="csagent">'+AG.replace('class="agico"','class="agico" style="width:36px;height:36px;font-size:14px;border-radius:9px"')+'<span class="nm">'+esc(T.name)+'</span><div class="acts"><span class="btn" id="csTestBtn">▷ Test</span><span class="btn" id="csSave">💾 Save</span><span class="btn">⚙ Settings</span><span class="btn cs" id="csPublish">Publish</span></div></div>'+
+'<div class="cstabs"><span class="cstab sel" id="tOv">Overview</span><span class="cstab" id="tKn">Knowledge</span><span class="cstab" id="tTo">Tools</span><span class="cstab">Agents</span><span class="cstab">Topics</span><span class="cstab">Activity</span><span class="cstab">Analytics</span><span class="cstab" id="tCh">Channels</span></div>'+
+'<div style="flex:1;display:flex;min-height:0"><div class="cspane">'+
+/* overview */
+'<div class="csv" id="vOv"><div class="cscard"><h4>Details</h4><div class="kv"><span class="k">Name</span><span>'+esc(T.name)+'</span><span class="k">Description</span><span>'+esc(T.desc)+'</span></div></div>'+
+'<div class="cscard"><h4>Instructions <span class="btn" id="iEdit">✎ Edit</span><span class="btn cs hide" id="iSave" style="margin-inline-start:0">Save</span></h4><div class="instr" id="iBox">'+instr+'</div></div>'+
+'<div class="cscard"><h4>Knowledge</h4><div id="ovKn">'+(st.kn?'<span class="chip"><span class="docx">W</span>'+esc(T.file)+' <span class="pill ready">Ready</span></span>':'<div class="empty" id="ovKnEmpty">No knowledge sources yet — uploaded files don\'t copy across</div>')+'</div></div>'+
+'<div class="cscard"><h4>Suggested prompts</h4><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">'+esc(T.p1)+'</span><span class="chip">'+esc(T.p2)+'</span></div></div></div>'+
+/* knowledge */
+'<div class="csv hide" id="vKn"><div class="cscard"><h4>Knowledge <span class="btn cs" id="knAdd">＋ Add knowledge</span></h4><div class="list" id="knList">'+(st.kn?'<div class="it"><span class="docx">W</span>'+esc(T.file)+'<span class="pill ready" style="margin-inline-start:auto">Ready</span></div>':'<div class="empty">Add knowledge so your agent can answer from your content</div>')+'</div></div></div>'+
+/* tools */
+'<div class="csv hide" id="vTo"><div class="cscard"><h4>Tools <span class="btn cs" id="toAdd">＋ Add a tool</span></h4><div class="list" id="toList">'+(tools||'<div class="empty" id="toEmpty">No tools yet</div>')+'</div></div></div>'+
+/* tool config */
+'<div class="csv hide" id="vCfg"><div class="cscard"><h4><span class="conn" id="cfgIco"></span><span id="cfgTitle"></span><span class="btn cs" id="cfgSave">Save</span></h4>'+
+'<div class="lbl" style="margin-top:0">Name</div><div class="fld" id="cfgName" style="max-width:520px"></div>'+
+'<div class="lbl">Inputs</div><div id="cfgInputs"></div>'+
+'<div style="display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px" id="cfgAsk"><span class="tog offt"></span> Ask the user before running <span class="pill">Off</span></div></div></div>'+
+/* channels */
+'<div class="csv hide" id="vCh"><div class="cscard"><h4>Channels</h4><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div class="it list" id="chTeams" style="display:flex;gap:10px;align-items:center;border:1px solid #e3e3e3;border-radius:10px;padding:14px;background:#fff"><span class="conn" style="background:#5B5FC7">T</span><b>Teams and Microsoft 365 Copilot</b></div><div style="border:1px solid #e3e3e3;border-radius:10px;padding:14px;background:#fff">🌐 Demo website</div><div style="border:1px solid #e3e3e3;border-radius:10px;padding:14px;background:#fff">🖥 Custom website</div></div><div id="chPanel" class="hide" style="margin-top:14px"><div class="cscard" style="background:#f8f8ff"><b>Teams and Microsoft 365 Copilot</b><div style="margin:8px 0" class="hint">Make your agent available in Teams and in Microsoft 365 Copilot.</div><label style="font-size:14px"><input type="checkbox" checked> Make agent available in Microsoft 365 Copilot</label><div style="margin-top:10px;display:flex;gap:8px"><span class="btn cs" id="chAdd">Add channel</span><span class="btn hide" id="chOpen">See agent in Teams</span></div></div></div></div></div>'+
+'</div>'+
+'<div class="cstest closed" id="csTest"><div class="pvh"><span>Test your agent</span><span>↻ ✕</span></div><div class="pvbody"><div class="msgs" id="csMsgs"></div></div><div class="pvin" id="csIn">Type your message</div></div>'+
+'</div></div></div>'+
+'<div class="modalBg hide" id="mdl"><div class="modal" id="mdlBody"></div></div>'+
+'</div></div>'; }
+
+function filePicker(name,icon){ return '<h3>Open</h3><div class="hint" style="margin-bottom:8px">This PC › Downloads › Lab files</div><div class="filepick"><div class="row" id="fpRow"><span class="docx'+(icon==="x"?" xlsx":"")+'">'+(icon==="x"?"X":"W")+'</span>'+esc(name)+'</div><div class="row"><span class="docx xlsx">X</span>'+(icon==="x"?esc(T.file):esc(T.tracker))+'</div></div><div style="text-align:end;margin-top:14px"><span class="btn pri" id="fpOpen">Open</span></div>'; }
+
+function excelWin(id,rows){ return '<div class="win off" id="'+id+'">'+chrome("onedrive › My files › "+T.tracker)+'<div class="appbody"><div style="background:var(--xl);color:#fff;padding:10px 16px;font-weight:600;display:flex;gap:10px;align-items:center"><span class="docx xlsx" style="background:#fff;color:var(--xl)">X</span>Excel · '+esc(T.tracker)+'<span style="margin-inline-start:auto;font-weight:400;font-size:13px">Table: Requests</span></div><div style="padding:22px"><table class="xlgrid"><tr><th>Title</th><th>Category</th><th>Priority</th><th>Location</th><th>Description</th><th>Status</th></tr><tbody id="'+id+'Rows">'+(rows||'')+'</tbody></table></div></div></div>'; }
+var ROW3='<td>2F door card reader broken</td><td>Security / door access</td><td class="prioH">High</td><td>2F</td><td>Door card reader on 2F is not working</td><td>New</td>';
+var ROW4='<td>6F pantry water dispenser leaking</td><td>Facilities</td><td>Medium</td><td>6F pantry</td><td>Water dispenser in the 6F pantry is leaking</td><td>New</td>';
+function ticket(t,c,p,l,d){ return '<b>Here is your ticket:</b><div class="tcard"><div class="kv"><span class="k">Title</span><span>'+t+'</span><span class="k">Category</span><span>'+c+'</span><span class="k">Priority</span><span'+(p==="High"?' class="prioH"':'')+'>'+p+'</span><span class="k">Location</span><span>'+l+'</span><span class="k">Description</span><span>'+d+'</span><span class="k">Status</span><span>New</span></div></div><div style="margin-top:8px">Shall I log it? Reply <b>Yes</b> to confirm.</div>'; }
+
+/* shared step chunks */
+function openTest(){ return click("#csTestBtn").then(function(){ q("#csTest").classList.remove("closed"); return sleep(500); }); }
+function ask(text){ return click("#csIn").then(function(){ return type("#csIn",text); }).then(function(){ msg("#csMsgs","u",esc(text)); q("#csIn").textContent="Type your message"; return sleep(300); }); }
+function addTool(search,pick,iconCls,title,conn){ return function(){
+return click("#tTo").then(function(){ tab(".cstab","#tTo"); view(".csv","#vTo"); return sleep(400); })
+.then(function(){ return click("#toAdd"); })
+.then(function(){ q("#mdlBody").innerHTML='<h3>Add tool</h3><div class="fld" id="tsSearch" style="margin-bottom:10px">🔍 </div><div style="display:flex;gap:8px;margin-bottom:10px"><span class="pill">All</span><span class="pill">Connector</span><span class="pill">Flow</span><span class="pill">Prompt</span><span class="pill">MCP</span></div><div class="list" id="tsRes"></div>'; show("#mdl"); return sleep(500); })
+.then(function(){ return click("#tsSearch"); }).then(function(){ return type("#tsSearch","🔍 "+search); })
+.then(function(){ q("#tsRes").innerHTML=pick.map(function(p,i){return '<div class="it" id="tsR'+i+'"><span class="conn '+iconCls+'">'+(iconCls==="x"?"X":"O")+'</span><div><b>'+p+'</b><div class="hint">'+conn+'</div></div></div>';}).join(""); return sleep(600); })
+.then(function(){ return click("#tsR0"); }).then(function(){ q("#tsR0").classList.add("sel"); return sleep(400); });
+}; }
+function connectAdd(conn,iconCls){ return function(){
+q("#mdlBody").innerHTML='<h3>Connection</h3><div class="it list" style="display:flex;gap:12px;align-items:center;border:1px solid #eee;border-radius:8px;padding:12px"><span class="conn '+iconCls+'">'+(iconCls==="x"?"X":"O")+'</span><div><b>'+conn+'</b><div class="hint" id="cnState">Not connected</div></div><span class="btn" id="cnSign" style="margin-inline-start:auto">Sign in</span></div><div style="text-align:end;margin-top:16px;display:flex;gap:8px;justify-content:flex-end"><span class="btn">Cancel</span><span class="btn cs" id="cnAdd">Add and configure</span></div>';
+return sleep(400).then(function(){ return click("#cnSign"); })
+.then(function(){ q("#cnState").textContent="Signing in…"; return sleep(900); })
+.then(function(){ q("#cnState").innerHTML='<span style="color:var(--ok);font-weight:600">✓ Connected as learner@cathaylab.onmicrosoft.com</span>'; q("#cnSign").classList.add("hide"); return sleep(500); })
+.then(function(){ return click("#cnAdd"); })
+.then(function(){ hide("#mdl"); });
+}; }
+function cfgOpen(iconCls,title,defName,inputs){ q("#cfgIco").className="conn "+iconCls; q("#cfgIco").textContent=iconCls==="x"?"X":"O"; q("#cfgTitle").textContent=title; q("#cfgName").textContent=defName;
+var ci=q("#cfgInputs"); if(inputs.length>4){ ci.style.cssText="display:grid;grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat("+Math.ceil(inputs.length/2)+",auto);column-gap:28px"; } else ci.style.cssText="";
+ci.innerHTML=inputs.map(function(r,i){ return '<div class="inrow" id="in'+i+'"><b>'+r[0]+'</b>'+(r[1]==="ai"?'<span class="ai">✦ Dynamically fill with AI</span>':'<div class="fld ph" data-ph="Select or enter a value" id="iv'+i+'"></div>')+'</div>'; }).join("");
+tab(".cstab","#tTo"); view(".csv","#vCfg"); }
+function editInstr(text){ return function(){
+return click("#tOv").then(function(){ tab(".cstab","#tOv"); view(".csv","#vOv"); return sleep(400); })
+.then(function(){ return click("#iEdit"); }).then(function(){ q("#iBox").classList.add("edit"); show("#iSave"); hide("#iEdit"); return sleep(300); })
+.then(function(){ var b=q("#iBox"); b.innerHTML=b.innerHTML+"\n"; return type("#iBox",text,{append:true,paste:true}); })
+.then(function(){ q("#iBox").classList.add("edit"); return click("#iSave"); })
+.then(function(){ q("#iBox").classList.remove("edit"); hide("#iSave"); show("#iEdit"); toast("Instructions saved"); return sleep(500); });
+}; }
+
+/* ---------- scenes ---------- */
+var SC=[];
+SC.push({badge:"MS-4022",title:"From Agent Builder to Copilot Studio",time:"",where:"Lab overview",
+html:function(){ return '<div class="win" style="background:transparent;box-shadow:none"><div class="hero"><div class="k">CATHAY WORKPLACE CONCIERGE · 3 DECEMBER 2026</div><h2>The lab in one picture</h2>'+
+'<div class="zone"><div id="z1" style="width:290px;background:#e3f0f0;color:#3D8F93;border:2px solid #9cc7c9">Agent Builder<br><span style="font-weight:400;font-size:15px">allowed at Cathay</span></div><div id="z2" style="flex:1;background:#d9eaea;color:var(--jade);border:2px solid #7fb0b0">Copilot Studio<br><span style="font-weight:400;font-size:15px">lab sandbox: where Cathay can grow next</span></div></div>'+
+'<div class="flow" style="margin-top:14px"><div class="fstep ab" id="f1"><div class="h">STEP 1<b>ANSWER</b></div><ul><li>Instructions</li><li>Policy file</li><li>Starter prompts</li></ul><div class="ok">✓ Answers questions</div></div><div class="fstep" id="f2"><div class="h">STEP 2<b>MOVE</b></div><ul><li>Copy to Studio</li><li>Re-upload file</li><li>Test again</li></ul><div class="ok">✓ Same agent, more control</div></div><div class="fstep" id="f3"><div class="h">STEP 3<b>RECORD</b></div><ul><li>Excel tool:</li><li>Add a row</li><li>&nbsp;</li></ul><div class="ok">✓ Logs the ticket</div></div><div class="fstep" id="f4"><div class="h">STEP 4<b>ACT</b></div><ul><li>Outlook tool:</li><li>Send an email</li><li>&nbsp;</li></ul><div class="ok">✓ Emails the ticket</div></div></div>'+
+'<div class="tag" id="tag">Agent Builder answers.&nbsp; Copilot Studio acts.</div></div></div>'; },
+steps:[
+{c1:"Today we build one agent — the Cathay Workplace Concierge — and grow it in four steps.",c2:"Agent Builder is what Cathay uses today; Copilot Studio is where it can grow next.",run:function(){ q("#z1").classList.add("in"); return sleep(500).then(function(){ q("#z2").classList.add("in"); return sleep(300); }); }},
+{c1:"Step 1 Answer → Step 2 Move → Step 3 Record → Step 4 Act",c2:"Each step ends with a ✓ check you can see for yourself.",run:function(){ var p=Promise.resolve(); ["#f1","#f2","#f3","#f4"].forEach(function(f){ p=p.then(function(){ q(f).classList.add("in"); return sleep(550); }); }); return p; }},
+{c1:"Agent Builder answers. Copilot Studio acts.",c2:"You need: your lab account, "+T.file+" and "+T.tracker+". You don't need SharePoint.",run:function(){ q("#tag").classList.add("in"); return sleep(600); }}
+]});
+
+SC.push({badge:"Exercise 1",title:"Build the agent in Agent Builder",time:"35 min",where:"in Agent Builder",
+html:function(){ return abWin("w1",false); },
+steps:[
+{c1:"Open Microsoft 365 Copilot and select Create agent.",c2:"It's in the left pane, under Agents.",run:function(){ return click("#abCreate").then(function(){ hide("#abHome"); show("#abBuilder"); return sleep(500); }); }},
+{c1:"Select Configure.",c2:"Describe lets you chat to build it — today we fill each box ourselves.",run:function(){ return click("#abTabC").then(function(){ tab("#abBuilder .tab","#abTabC"); hide("#abDesc"); show("#abForm"); return sleep(400); }); }},
+{c1:"Name: Cathay Workplace Concierge",c2:"",copy:T.name,run:function(){ return click("#fName").then(function(){ return type("#fName",T.name); }).then(function(){ q("#pvName").textContent=T.name; }); }},
+{c1:"Description: Answers questions about hybrid work, rooms, travel and facilities.",c2:"",copy:T.desc,run:function(){ return click("#fDesc").then(function(){ return type("#fDesc",T.desc); }); }},
+{c1:"Instructions: paste the instruction text from your lab guide.",c2:"Answer only from the policy file · say so if it's not there · short bullet points.",copy:T.instr,run:function(){ return click("#fInstr").then(function(){ return type("#fInstr",T.instr,{paste:true}); }); }},
+{c1:"Knowledge: select Upload and add "+T.file+".",c2:"Wait until the file shows Ready.",run:function(){ return scrollTo("#kRow","#abForm").then(function(){ return click("#kUpload"); }).then(function(){ var bg=document.createElement("div"); bg.className="modalBg"; bg.id="fpBg"; bg.innerHTML='<div class="modal">'+filePicker(T.file,"w")+'</div>'; q("#w1 .appbody").appendChild(bg); return sleep(500); }).then(function(){ return click("#fpRow"); }).then(function(){ q("#fpRow").classList.add("sel"); return click("#fpOpen"); }).then(function(){ q("#fpBg").remove(); show("#kFile"); var p=q("#kFile .pill"); p.className="pill prog"; p.textContent="Uploading…"; return sleep(1100); }).then(function(){ var p=q("#kFile .pill"); p.className="pill ready"; p.textContent="Ready"; return sleep(300); }); }},
+{c1:"Turn off web search.",c2:"So the agent answers only from the Cathay policy file.",run:function(){ return click("#webTog").then(function(){ q("#webTog").classList.add("offt"); return sleep(400); }); }},
+{c1:"Starter prompts: add these two.",c2:"",copy:T.p1+"\n"+T.p2,run:function(){ return scrollTo("#sp1","#abForm").then(function(){ return click("#sp1"); }).then(function(){ return type("#sp1",T.p1); }).then(function(){ return click("#sp2"); }).then(function(){ return type("#sp2",T.p2); }).then(function(){ q("#pvStart").innerHTML='<div class="starter" id="st1">'+esc(T.p1)+'</div><div class="starter" id="st2">'+esc(T.p2)+'</div>'; return sleep(400); }); }},
+{c1:"Test prompt 1 in the preview pane.",c2:"Expected: 3 days a week, and it names the policy.",run:function(){ return click("#st1").then(function(){ hide("#pvStart"); msg("#pvMsgs","u",esc(T.p1)); return reply("#pvMsgs",'<ul><li>You must be in the office <b>3 days a week</b>.</li></ul><div class="src"><span class="docx" style="width:16px;height:18px;font-size:9px">W</span>Policy used: Hybrid work · '+esc(T.file)+'</div>'); }); }},
+{c1:"Test prompt 2.",c2:"Expected: GBP 220, and it names the policy.",run:function(){ return click("#pvIn").then(function(){ return type("#pvIn",T.p2); }).then(function(){ q("#pvIn").textContent="Ask a question"; msg("#pvMsgs","u",esc(T.p2)); return reply("#pvMsgs",'<ul><li>The hotel limit in London is <b>GBP 220</b> per night.</li></ul><div class="src"><span class="docx" style="width:16px;height:18px;font-size:9px">W</span>Policy used: Duty travel · '+esc(T.file)+'</div>'); }); }},
+{c1:"Both answers check out — select Create.",c2:"✅ Check: the agent answers 3 days and GBP 220, and names the policy.",run:function(){ return click("#abCreateBtn").then(function(){ toast("Your agent has been created"); return callout("✅ Check: answers <b>3 days</b> and <b>GBP 220</b>, and names the policy",470,330); }); }}
+]});
+
+SC.push({badge:"Exercise 2",title:"Copy it to Copilot Studio",time:"20 min",where:"Agent Builder → Copilot Studio",
+html:function(){ return abWin("w1",true)+csWin("w2",{}); },
+init:function(){ q("#w2").classList.add("off"); },
+steps:[
+{c1:"Open your agent in edit mode.",c2:"Select it under Agents, then Edit.",run:function(){ return moveTo("#abHeadNm"); }},
+{c1:"Select … (More options), then Copy to Copilot Studio.",c2:"⚠ Select it once only — otherwise you get two copies.",run:function(){ return click("#abMore").then(function(){ show("#abMenu"); return sleep(400); }).then(function(){ return click("#mCopy"); }).then(function(){ q("#mCopy").classList.add("hov"); return sleep(300); }).then(function(){ hide("#abMenu"); toast("Copying your agent to Copilot Studio…"); return sleep(1300); }).then(function(){ return win("#w2"); }); }},
+{c1:"In Copilot Studio, select Save.",c2:"Name, description, instructions and prompts came across.",run:function(){ ring("#vOv .cscard"); return click("#csSave").then(function(){ toast("Saved"); clearRings(); return sleep(400); }); }},
+{c1:"Notice: Knowledge is empty.",c2:"💡 Your name, instructions and prompts copy across, but uploaded files don't.",run:function(){ ring("#ovKnEmpty"); return moveTo("#ovKnEmpty").then(function(){ return callout("💡 <b>Why upload again?</b><br>Your name, instructions and prompts copy across,<br>but uploaded files don't.",900,470,true); }); }},
+{c1:"Go to Knowledge, select Add knowledge, then Upload file.",c2:"Add the policy file again and wait until it says Ready.",run:function(){ $$("[data-tmp]",stage).forEach(function(e){e.remove()}); clearRings(); return click("#tKn").then(function(){ tab(".cstab","#tKn"); view(".csv","#vKn"); return sleep(400); }).then(function(){ return click("#knAdd"); }).then(function(){ q("#mdlBody").innerHTML='<h3>Add knowledge</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="it list" id="kUp" style="border:1px solid #ddd;border-radius:8px;padding:14px">⤒ <b>Upload file</b><div class="hint">Drag files or browse</div></div><div style="border:1px solid #ddd;border-radius:8px;padding:14px">🌐 Public websites</div><div style="border:1px solid #ddd;border-radius:8px;padding:14px">🗂 SharePoint</div><div style="border:1px solid #ddd;border-radius:8px;padding:14px">🧩 Dataverse</div></div>'; show("#mdl"); return sleep(500); }).then(function(){ return click("#kUp"); }).then(function(){ q("#mdlBody").innerHTML=filePicker(T.file,"w"); return sleep(400); }).then(function(){ return click("#fpRow"); }).then(function(){ q("#fpRow").classList.add("sel"); return click("#fpOpen"); }).then(function(){ hide("#mdl"); q("#knList").innerHTML='<div class="it"><span class="docx">W</span>'+esc(T.file)+'<span class="pill prog" id="knSt" style="margin-inline-start:auto">In progress</span></div>'; return sleep(1600); }).then(function(){ var p=q("#knSt"); p.className="pill ready"; p.textContent="Ready"; ring("#knSt"); return sleep(500); }); }},
+{c1:"Test with: What is the hotel limit in London?",c2:"",copy:T.p2,run:function(){ clearRings(); return openTest().then(function(){ return ask(T.p2); }).then(function(){ return reply("#csMsgs",'<ul><li>The hotel limit in London is <b>GBP 220</b> per night.</li></ul><div class="src">📄 Policy used: Duty travel · '+esc(T.file)+'</div>',1500); }); }},
+{c1:"✅ Check: it answers the same way it did in Agent Builder.",c2:"Same agent — now with more control.",run:function(){ return callout("✅ Same answer as Agent Builder: <b>GBP 220</b>",560,300); }}
+]});
+
+var EX3IN=[["Location"],["Document Library"],["File"],["Table"],["Title","ai"],["Category","ai"],["Priority","ai"],["Location (column)","ai"],["Description","ai"],["Status","ai"]];
+SC.push({badge:"Exercise 3",title:"Log tickets in Excel (Excel tool)",time:"35 min",where:"in Copilot Studio",
+html:function(){ return csWin("w2",{kn:true})+excelWin("w3",""); },
+steps:[
+{c1:"Go to Tools, select Add a tool, search Excel…",c2:"…then pick Add a row into a table.",run:addTool("Excel",["Add a row into a table","List rows present in a table","Update a row"],"x","","Excel Online (Business)")},
+{c1:"Connect: sign in, then select Add.",c2:"This creates your connection to Excel Online (Business).",run:connectAdd("Excel Online (Business)","x")},
+{c1:"Rename the tool to Log Workplace Request.",c2:"",copy:"Log Workplace Request",run:function(){ cfgOpen("x","Add a row into a table","Add a row into a table",EX3IN); return sleep(400).then(function(){ return click("#cfgName"); }).then(function(){ return type("#cfgName","Log Workplace Request"); }).then(function(){ q("#cfgTitle").textContent="Log Workplace Request"; }); }},
+{c1:"Tracker saved in your OneDrive (My files)? Then set these 4 boxes.",c2:"Location · Document Library · File · Table",copy:"Location:          OneDrive for Business\nDocument Library:  OneDrive\nFile:              Workplace Requests Tracker.xlsx\nTable:             Requests",run:function(){ var v=["OneDrive for Business","OneDrive",T.tracker,"Requests"], p=Promise.resolve(); v.forEach(function(val,i){ p=p.then(function(){ return click("#iv"+i); }).then(function(){ return type("#iv"+i,val); }); }); return p; }},
+{c1:"Leave the 6 columns on Dynamically fill with AI.",c2:"Title, Category, Priority, Location, Description, Status — the agent fills them from the chat.",run:function(){ [4,5,6,7,8,9].forEach(function(i){ ring("#in"+i+" .ai"); }); return moveTo("#in6 .ai").then(function(){ return sleep(900); }); }},
+{c1:"Select Save. Leave Ask user before running OFF.",c2:"The agent already shows the ticket and asks the user to confirm.",run:function(){ clearRings(); ring("#cfgAsk"); return moveTo("#cfgAsk",20).then(function(){ return sleep(500); }).then(function(){ return click("#cfgSave"); }).then(function(){ toast("Tool saved"); clearRings(); q("#toList").innerHTML='<div class="it"><span class="conn x">X</span><div><b>Log Workplace Request</b><div class="hint">Excel Online (Business) · Add a row into a table</div></div><span class="pill ready" style="margin-inline-start:auto">On</span></div>'; view(".csv","#vTo"); return sleep(500); }); }},
+{c1:"Add these lines to the end of the agent's instructions.",c2:"Overview → Instructions → Edit → paste → Save",copy:T.instr3,run:editInstr(T.instr3)},
+{c1:"Test: type “The 2F door card reader is broken”.",c2:"The agent shows a ticket and asks you to confirm.",copy:T.t3,run:function(){ return openTest().then(function(){ return ask(T.t3); }).then(function(){ return reply("#csMsgs",ticket("2F door card reader broken","Security / door access","High","2F","Door card reader on 2F is not working"),1500); }); }},
+{c1:"Reply Yes.",c2:"The agent calls Log Workplace Request.",run:function(){ return ask("Yes").then(function(){ var a=msg("#csMsgs","a",""); a.className="act"; a.innerHTML="🔧 Log Workplace Request · running…"; return sleep(1200).then(function(){ a.innerHTML="🔧 Log Workplace Request · ✓ completed"; return reply("#csMsgs","Logged. Your ticket is in the Workplace Requests tracker.",800); }); }); }},
+{c1:"✅ Check: a new row appears in Excel with Priority: High.",c2:"Open "+T.tracker+" in your OneDrive.",run:function(){ return win("#w3").then(function(){ q("#w3Rows").innerHTML='<tr class="newrow">'+ROW3+'</tr>'; return sleep(600); }).then(function(){ return callout("✅ New row · <b>Priority: High</b>",1000,420); }); }}
+]});
+
+SC.push({badge:"Exercise 4",title:"Send the ticket by email (Outlook tool)",time:"30 min",where:"in Copilot Studio",
+html:function(){ return csWin("w2",{kn:true,i3:true,tools:[["x","Log Workplace Request","Excel Online (Business) · Add a row into a table"]]})+excelWin("w3",'<tr>'+ROW3+'</tr>')+
+'<div class="win off" id="w4">'+chrome("outlook.office.com/mail/inbox")+'<div class="appbody"><div style="background:var(--ol);color:#fff;padding:10px 16px;font-weight:600">Outlook</div><div style="display:flex;flex:1"><div style="width:200px;background:#fafafa;padding:14px;font-size:14px;line-height:2;border-inline-end:1px solid #eee"><b>Inbox</b><br>Drafts<br>Sent Items</div><div style="width:480px;border-inline-end:1px solid #eee" class="olist" id="olList"><div class="m"><b>Lab team</b>Welcome to MS-4022</div><div class="m"><b>Microsoft 365</b>Your workspace is ready</div></div><div style="flex:1;padding:24px;font-size:15px" id="olRead"></div></div></div></div>'; },
+steps:[
+{c1:"Go to Tools, select Add a tool, and search for Send an email (V2).",c2:"Pick the Office 365 Outlook one.",run:addTool("Send an email (V2)",["Send an email (V2)","Send an email from a shared mailbox (V2)"],"o","","Office 365 Outlook")},
+{c1:"Sign in to create the connection, then select Add.",c2:"",run:connectAdd("Office 365 Outlook","o")},
+{c1:"Rename the tool to: Send Workplace Request",c2:"",copy:"Send Workplace Request",run:function(){ cfgOpen("o","Send an email (V2)","Send an email (V2)",[["To"],["Subject","ai"],["Body","ai"]]); return sleep(400).then(function(){ return click("#cfgName"); }).then(function(){ return type("#cfgName","Send Workplace Request"); }).then(function(){ q("#cfgTitle").textContent="Send Workplace Request"; }); }},
+{c1:"Set To to your own email.",c2:"Leave Subject and Body to Fill with AI (Subject = ticket Title, Body = the full ticket).",run:function(){ return click("#iv0").then(function(){ return type("#iv0","learner@cathaylab.onmicrosoft.com"); }).then(function(){ ring("#in1 .ai"); ring("#in2 .ai"); return sleep(800); }); }},
+{c1:"Leave Ask user before running OFF, then select Save.",c2:"The agent already shows the ticket first.",run:function(){ clearRings(); ring("#cfgAsk"); return moveTo("#cfgAsk",20).then(function(){ return sleep(400); }).then(function(){ return click("#cfgSave"); }).then(function(){ clearRings(); toast("Tool saved"); q("#toList").insertAdjacentHTML("beforeend",'<div class="it"><span class="conn o">O</span><div><b>Send Workplace Request</b><div class="hint">Office 365 Outlook · Send an email (V2)</div></div><span class="pill ready" style="margin-inline-start:auto">On</span></div>'); view(".csv","#vTo"); return sleep(500); }); }},
+{c1:"Add this line to the end of the instructions.",c2:"",copy:T.instr4,run:editInstr(T.instr4)},
+{c1:"Test with: The 6F pantry water dispenser is leaking.",c2:"",copy:T.t4,run:function(){ return openTest().then(function(){ return ask(T.t4); }).then(function(){ return reply("#csMsgs",ticket("6F pantry water dispenser leaking","Facilities","Medium","6F pantry","Water dispenser in the 6F pantry is leaking"),1500); }); }},
+{c1:"Reply Yes.",c2:"Both tools run: log the row, then email the ticket.",run:function(){ return ask("Yes").then(function(){ var a=msg("#csMsgs","a","🔧 Log Workplace Request · ✓ completed"); a.className="act"; return sleep(800); }).then(function(){ var b=msg("#csMsgs","a","🔧 Send Workplace Request · ✓ completed"); b.className="act"; return reply("#csMsgs","Sent. The Workplace team will follow up.",900); }); }},
+{c1:"✅ Check: the email arrives in your inbox…",c2:"",run:function(){ return win("#w4").then(function(){ q("#olList").insertAdjacentHTML("afterbegin",'<div class="m newm" id="olNew"><b>Cathay Workplace Concierge</b>6F pantry water dispenser leaking</div>'); return sleep(600); }).then(function(){ return click("#olNew"); }).then(function(){ q("#olRead").innerHTML='<h3 style="margin-top:0">6F pantry water dispenser leaking</h3><div class="hint">To: learner@cathaylab.onmicrosoft.com</div><div class="tcard" style="margin-top:14px;font-size:14px"><div class="kv"><span class="k">Title</span><span>6F pantry water dispenser leaking</span><span class="k">Category</span><span>Facilities</span><span class="k">Priority</span><span>Medium</span><span class="k">Location</span><span>6F pantry</span><span class="k">Description</span><span>Water dispenser in the 6F pantry is leaking</span><span class="k">Status</span><span>New</span></div></div>'; return sleep(500); }); }},
+{c1:"…and a new row appears in Excel.",c2:"Agent Builder answers. Copilot Studio acts.",run:function(){ return win("#w3").then(function(){ q("#w3Rows").insertAdjacentHTML("beforeend",'<tr class="newrow">'+ROW4+'</tr>'); return sleep(500); }).then(function(){ return callout("✅ Email in inbox + new row in Excel",960,420); }); }}
+]});
+
+SC.push({badge:"Wrap-up",title:"Agent Builder answers. Copilot Studio acts.",time:"30 min",where:"Trainer demo",
+html:function(){ return csWin("w2",{kn:true,i3:true,i4:true,tools:[["x","Log Workplace Request","Excel Online (Business) · Add a row into a table"],["o","Send Workplace Request","Office 365 Outlook · Send an email (V2)"]]})+
+'<div class="win off" id="w5">'+chrome("teams.microsoft.com")+'<div class="appbody"><div style="background:#464775;color:#fff;padding:10px 16px;font-weight:600">Microsoft Teams</div><div class="tm"><div class="tmrail"><div class="ti">🔔<br>Activity</div><div class="ti">💬<br>Chat</div><div class="ti sel"><span class="cpl"></span>Copilot</div><div class="ti">👥<br>Teams</div></div><div style="width:260px;border-inline-end:1px solid #eee;padding:14px;font-size:14px"><b>Agents</b><div class="ri sel" style="margin-top:8px"><span class="agico" style="width:24px;height:24px;font-size:10px;border-radius:5px">CW</span> Cathay Workplace Concierge</div></div><div style="flex:1;display:flex;flex-direction:column;padding:16px"><div class="pvid">'+AG+'<b>'+esc(T.name)+'</b><span class="hint">'+esc(T.desc)+'</span></div><div class="msgs" id="tmMsgs"></div></div></div></div></div>'; },
+steps:[
+{c1:"Agent Builder answers. Copilot Studio acts.",c2:"What you build in Agent Builder today can move to Copilot Studio later.",run:function(){ return callout('<div style="font-size:30px">Agent Builder <b>answers</b>. Copilot Studio <b>acts</b>.</div><div style="font-weight:400;font-size:18px;margin-top:6px">What you build in Agent Builder today can move to Copilot Studio later.</div>',330,250); }},
+{c1:"Trainer demo: select Publish.",c2:"",run:function(){ $$("[data-tmp]",stage).forEach(function(e){e.remove()}); return click("#csPublish").then(function(){ q("#mdlBody").innerHTML='<h3>Publish this agent</h3><p>Publishing updates the agent in every channel it\'s connected to.</p><div style="text-align:end"><span class="btn cs" id="pubGo">Publish</span></div>'; show("#mdl"); return sleep(400); }).then(function(){ return click("#pubGo"); }).then(function(){ q("#mdlBody").innerHTML='<h3>Publishing…</h3><div class="typing"><i></i><i></i><i></i></div>'; return sleep(1200); }).then(function(){ hide("#mdl"); toast("Published successfully"); return sleep(500); }); }},
+{c1:"Then Channels → Teams and Microsoft 365 Copilot.",c2:"Turn the channel on so people can find the agent where they already work.",run:function(){ return click("#tCh").then(function(){ tab(".cstab","#tCh"); view(".csv","#vCh"); return sleep(400); }).then(function(){ return click("#chTeams"); }).then(function(){ show("#chPanel"); return sleep(400); }).then(function(){ return click("#chAdd"); }).then(function(){ toast("Channel added"); hide("#chAdd"); show("#chOpen"); return sleep(400); }); }},
+{c1:"The same agent — now in Teams and Microsoft 365 Copilot.",c2:"Answers from policy, logs tickets and emails them.",run:function(){ return click("#chOpen").then(function(){ return win("#w5"); }).then(function(){ msg("#tmMsgs","u",esc(T.p1)); return reply("#tmMsgs",'<ul><li>You must be in the office <b>3 days a week</b>.</li></ul><div class="src">📄 Policy used: Hybrid work</div>'); }); }}
+]});
+
+/* ---------- engine ---------- */
+var sel=$("#sceneSel");
+SC.forEach(function(s,i){ var o=document.createElement("option"); o.value=i; o.textContent=(i===0?"Overview":s.badge)+" — "+s.title; sel.appendChild(o); });
+sel.addEventListener("change",function(){ go(+sel.value,0); });
+function setCap(s,k){ var st=s.steps[k]; $("#capN").textContent=k+1; $("#capOf").textContent="of "+s.steps.length; $("#cap1").textContent=st.c1; $("#cap2").textContent=st.c2||"";
+if(st.copy){ $("#capCopy").classList.add("show"); $("#capPre").textContent=st.copy; } else $("#capCopy").classList.remove("show");
+var d=$("#dots"); d.innerHTML=""; s.steps.forEach(function(_,i){ var e=document.createElement("i"); if(i===k)e.className="on"; else if(i<k)e.className="done"; d.appendChild(e); }); }
+function render(n){ var s=SC[n]; $("#winArea").innerHTML=s.html(); $$(".toast,.callout,.rip,.paste",stage).forEach(function(e){e.remove()}); if(s.init)s.init(); cur.style.display=n===0?"none":"";
+$("#sBadge").textContent=s.badge; $("#sTitle").textContent=s.title; $("#sTime").textContent=s.time?("· "+s.time):""; $("#sWhere").textContent=s.where; sel.value=n; }
+function stopAll(){ S.token++; }
+function go(n,k){ S.token++; var tok=S.token; S.scene=n; S.step=k; render(n); var s=SC[n]; setCap(s,k);
+S.instant=true; var chain=Promise.resolve();
+for(var i=0;i<k;i++){ (function(i){ chain=chain.then(function(){ return s.steps[i].run(); }); })(i); }
+chain=chain.then(function(){ $$("[data-tmp]",stage).forEach(function(e){e.remove()}); clearRings(); S.instant=false; return sleep(350); })
+.then(function(){ return s.steps[k].run(); })
+.then(function(){ if(S.auto&&tok===S.token){ return sleep(2200).then(function(){ if(tok===S.token) next(); }); } })
+.catch(function(e){ if(!(e instanceof Cancel)) console.error(e); }); }
+function next(){ var s=SC[S.scene]; if(S.step<s.steps.length-1) go(S.scene,S.step+1); else if(S.scene<SC.length-1) go(S.scene+1,0); else { S.auto=false; $("#bAuto").classList.remove("on"); } }
+function prev(){ if(S.step>0) go(S.scene,S.step-1); else if(S.scene>0){ go(S.scene-1,SC[S.scene-1].steps.length-1); } }
+$$(".ctrl button").forEach(function(b){ b.addEventListener("click",function(){ b.blur(); }); });
+$("#bNext").addEventListener("click",next); $("#bPrev").addEventListener("click",prev);
+$("#bReplay").addEventListener("click",function(){ go(S.scene,S.step); });
+function toggleAuto(){ S.auto=!S.auto; $("#bAuto").classList.toggle("on",S.auto); if(S.auto) next(); }
+$("#bAuto").addEventListener("click",toggleAuto);
+$("#speed").addEventListener("change",function(){ S.speed=+this.value; });
+document.addEventListener("keydown",function(e){ if($("#present").classList.contains("hidden")) return; if(e.target&&/SELECT|INPUT|TEXTAREA/.test(e.target.tagName)) return;
+if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){ e.preventDefault(); next(); }
+else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); prev(); }
+else if(e.key==="r"||e.key==="R") go(S.scene,S.step);
+else if(e.key==="a"||e.key==="A") toggleAuto();
+else if(e.key==="f"||e.key==="F"){ var el=document.documentElement; if(!document.fullscreenElement&&el.requestFullscreen) el.requestFullscreen().catch(function(){}); else if(document.exitFullscreen) document.exitFullscreen().catch(function(){}); }
+});
+document.addEventListener("fullscreenchange",function(){ setTimeout(fit,100); });
+/* deep link: #learn opens learner view */
+if(location.hash==="#learn"){ mode("l"); }
+fit(); go(0,0);
+})();
+</script>
+</body>
+</html>
