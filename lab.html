@@ -339,6 +339,7 @@ ol.steps>li label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
 <h2>Lab: From Agent Builder to Copilot Studio</h2>
 <div class="meta">Cathay Workplace Concierge · MS-4022 · 3 December 2026</div>
 <p><b>You need:</b> your lab account, <b>Cathay Workplace Policies (Sample).docx</b> and <b>Workplace Requests Tracker.xlsx</b>. You don't need SharePoint.</p>
+<div id="files" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px;padding:12px 14px;background:#F6FAFA;border:1px solid #cfe0e0;border-radius:10px"><b style="margin-inline-end:4px">⬇ Lab files:</b><button type="button" class="dlb" data-dl="pol" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--jade);background:#fff;color:var(--jade);border-radius:8px;padding:7px 12px;font-weight:600;cursor:pointer;font-size:14px"><span class="docx">W</span>Cathay Workplace Policies (Sample).docx</button><button type="button" class="dlb" data-dl="trk" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--jade);background:#fff;color:var(--jade);border-radius:8px;padding:7px 12px;font-weight:600;cursor:pointer;font-size:14px"><span class="docx xlsx">X</span>Workplace Requests Tracker.xlsx</button><span class="hint" style="flex-basis:100%">Save both to your computer first. In Exercise 3, upload the tracker to your OneDrive (My files). Sample content for this lab only.</span></div>  
 <p style="margin:0"><b>Step 1 Answer</b> (Agent Builder) → <b>Step 2 Move</b> → <b>Step 3 Record</b> → <b>Step 4 Act</b> (Copilot Studio). Tick each step as you go — your progress is kept in this browser.</p>
 <div class="prog"><i id="progBar"></i></div>
 <div class="toc"><a href="#ex1">Exercise 1 · Build</a><a href="#ex2">Exercise 2 · Copy</a><a href="#ex3">Exercise 3 · Excel</a><a href="#ex4">Exercise 4 · Outlook</a><a href="#wrap">Wrap-up</a><a href="#fix">If something goes wrong</a></div>
@@ -720,9 +721,63 @@ else if(e.key==="a"||e.key==="A") toggleAuto();
 else if(e.key==="f"||e.key==="F"){ var el=document.documentElement; if(!document.fullscreenElement&&el.requestFullscreen) el.requestFullscreen().catch(function(){}); else if(document.exitFullscreen) document.exitFullscreen().catch(function(){}); }
 });
 document.addEventListener("fullscreenchange",function(){ setTimeout(fit,100); });
-/* deep link: #learn opens learner view */
-if(location.hash==="#learn"){ mode("l"); }
-fit(); go(0,0);
+/* lab file downloads: files are built in the browser */
+var CRC=(function(){ var t=[],c,n,k; for(n=0;n<256;n++){ c=n; for(k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); t[n]=c>>>0; } return t; })();
+function crc(b){ var c=0xFFFFFFFF; for(var i=0;i<b.length;i++) c=CRC[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function zip(files){ var enc=new TextEncoder(), parts=[], cen=[], off=0;
+function u16(a,v){ a.push(v&255,(v>>>8)&255); } function u32(a,v){ a.push(v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255); }
+files.forEach(function(f){ var nm=enc.encode(f[0]), d=enc.encode(f[1]), c=crc(d), h=[]; u32(h,0x04034b50); u16(h,20); u16(h,2048); u16(h,0); u16(h,0); u16(h,33); u32(h,c); u32(h,d.length); u32(h,d.length); u16(h,nm.length); u16(h,0);
+var e=[]; u32(e,0x02014b50); u16(e,20); u16(e,20); u16(e,2048); u16(e,0); u16(e,0); u16(e,33); u32(e,c); u32(e,d.length); u32(e,d.length); u16(e,nm.length); u16(e,0); u16(e,0); u16(e,0); u16(e,0); u32(e,0); u32(e,off);
+parts.push(new Uint8Array(h),nm,d); cen.push(new Uint8Array(e),nm); off+=h.length+nm.length+d.length; });
+var cs=0; cen.forEach(function(x){ cs+=x.length; }); var z=[]; u32(z,0x06054b50); u16(z,0); u16(z,0); u16(z,files.length); u16(z,files.length); u32(z,cs); u32(z,off); u16(z,0);
+return parts.concat(cen,[new Uint8Array(z)]); }
+function xe(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+var XH='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', REL="http://schemas.openxmlformats.org/officeDocument/2006/relationships", PKG="http://schemas.openxmlformats.org/package/2006/relationships", CT="http://schemas.openxmlformats.org/package/2006/content-types";
+function buildDocx(){ var W='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+function run(t,o){ o=o||{}; return '<w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/>'+(o.b?'<w:b/>':'')+(o.i?'<w:i/>':'')+(o.c?'<w:color w:val="'+o.c+'"/>':'')+'<w:sz w:val="'+(o.s||22)+'"/></w:rPr><w:t xml:space="preserve">'+xe(t)+'</w:t></w:r>'; }
+function p(r,sp,ind){ return '<w:p><w:pPr><w:spacing w:before="'+(sp||0)+'" w:after="100"/>'+(ind?'<w:ind w:left="360" w:hanging="240"/>':'')+'</w:pPr>'+r+'</w:p>'; }
+function h1(t){ return p(run(t,{b:1,c:"005D63",s:30}),280); } function h2(t){ return p(run(t,{b:1,c:"005D63",s:24}),160); }
+function li(t){ return p(run("•  "+t),0,1); } function own(o){ return p(run("Policy owner: ",{b:1})+run(o),60); }
+function cell(t,b,f){ return '<w:tc><w:tcPr><w:tcW w:w="4200" w:type="dxa"/>'+(f?'<w:shd w:val="clear" w:color="auto" w:fill="'+f+'"/>':'')+'</w:tcPr><w:p>'+run(t,{b:b,c:f==="005D63"?"FFFFFF":null})+'</w:p></w:tc>'; }
+var B='<w:tblBorders><w:top w:val="single" w:sz="4" w:color="BFD9D9"/><w:left w:val="single" w:sz="4" w:color="BFD9D9"/><w:bottom w:val="single" w:sz="4" w:color="BFD9D9"/><w:right w:val="single" w:sz="4" w:color="BFD9D9"/><w:insideH w:val="single" w:sz="4" w:color="BFD9D9"/><w:insideV w:val="single" w:sz="4" w:color="BFD9D9"/></w:tblBorders>';
+var rows=[["City","Hotel limit per night"],["London","GBP 220"],["New York","USD 320"],["Tokyo","JPY 28,000"],["Singapore","SGD 300"],["Sydney","AUD 280"],["Other cities","USD 200"]];
+var tbl='<w:tbl><w:tblPr><w:tblW w:w="8400" w:type="dxa"/>'+B+'</w:tblPr><w:tblGrid><w:gridCol w:w="4200"/><w:gridCol w:w="4200"/></w:tblGrid>'+rows.map(function(r,i){ return '<w:tr>'+cell(r[0],1,i?null:"005D63")+cell(r[1],!i,i?null:"005D63")+'</w:tr>'; }).join("")+'</w:tbl>';
+var body=[p(run("Cathay Workplace Policies (Sample)",{c:"005D63",s:48})),
+p(run('Lab sample for the MS-4022 "From Agent Builder to Copilot Studio" lab. Fictional content for training only. This is not a real Cathay Pacific policy.',{i:1,c:"616161"})),
+h1("1. Hybrid work policy"),p(run("Cathay uses a hybrid model so teams can collaborate in person and focus remotely.")),
+li("Employees must be in the office 3 days a week."),li("Tuesday and Thursday are team anchor days. Teams choose the third day."),li("Core collaboration hours are 10:00 to 16:00 local time."),li("Working from another country needs written approval from your manager and HR first."),li("Hot desks are booked through the workplace app, up to 2 weeks ahead."),own("People & Culture"),
+h1("2. Meeting room policy"),p(run("Meeting rooms are shared. Book only what you need.")),
+li("Book rooms in Outlook. Bookings can be up to 4 hours long."),li("Release the room if your meeting is cancelled."),li("If nobody checks in within 15 minutes, the booking is released automatically."),li("Boardrooms on 8F need approval from the Executive Office."),li("Leave the room clean and switch off the screen when you leave."),own("Workplace Services"),
+h1("3. Duty travel policy"),p(run("Duty travel must be approved by your manager before you book. Book through the corporate travel portal.")),
+h2("Hotel limits (per night, including taxes)"),tbl,p(""),
+li("Economy class for flights under 6 hours. Premium economy for 6 hours or longer."),li("Daily meal allowance: USD 75, or the local equivalent."),li("Submit expenses within 30 days of returning, with receipts."),own("Finance, Travel Desk"),
+h1("4. Facilities requests policy"),p(run("Report any problem with the building, equipment or office services so it can be fixed quickly.")),
+li("Every request needs: Title, Category, Priority, Location, Description and Status."),li("Categories: Facilities, IT, Security, Cleaning."),li("Priority is High if the issue affects safety or door access. Response within 1 hour."),li("Priority is Medium for issues that stop work in one area, such as a leak or a broken appliance. Response within 1 working day."),li("Priority is Low for cosmetic or minor issues. Response within 3 working days."),li("New requests start with Status = New."),own("Workplace Services")].join("");
+return zip([["[Content_Types].xml",XH+'<Types xmlns="'+CT+'"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'],
+["_rels/.rels",XH+'<Relationships xmlns="'+PKG+'"><Relationship Id="rId1" Type="'+REL+'/officeDocument" Target="word/document.xml"/></Relationships>'],
+["word/document.xml",XH+'<w:document '+W+'><w:body>'+body+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1200" w:right="1200" w:bottom="1200" w:left="1200" w:header="600" w:footer="600" w:gutter="0"/></w:sectPr></w:body></w:document>']]); }
+function buildXlsx(){ var S="http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+function c(ref,t,s){ return '<c r="'+ref+'" t="inlineStr"'+(s?' s="'+s+'"':'')+'><is><t>'+xe(t)+'</t></is></c>'; }
+var hd=["Title","Category","Priority","Location","Description","Status"], r3=["Lift lobby light flickering (sample)","Facilities","Low","1F lift lobby","Sample row. The ceiling light near lift 2 flickers.","New"], L="ABCDEF";
+var sheet=XH+'<worksheet xmlns="'+S+'" xmlns:r="'+REL+'"><cols><col min="1" max="1" width="38" customWidth="1"/><col min="2" max="4" width="15" customWidth="1"/><col min="5" max="5" width="52" customWidth="1"/><col min="6" max="6" width="10" customWidth="1"/></cols><sheetData>'+
+'<row r="1">'+c("A1","Cathay Workplace Requests (lab sample, not a real system)",1)+'</row>'+
+'<row r="2">'+hd.map(function(v,i){ return c(L[i]+"2",v); }).join("")+'</row>'+
+'<row r="3">'+r3.map(function(v,i){ return c(L[i]+"3",v); }).join("")+'</row></sheetData><tableParts count="1"><tablePart r:id="rId1"/></tableParts></worksheet>';
+var table=XH+'<table xmlns="'+S+'" id="1" name="Requests" displayName="Requests" ref="A2:F3" totalsRowShown="0"><autoFilter ref="A2:F3"/><tableColumns count="6">'+hd.map(function(v,i){ return '<tableColumn id="'+(i+1)+'" name="'+v+'"/>'; }).join("")+'</tableColumns><tableStyleInfo name="TableStyleMedium7" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/></table>';
+var styles=XH+'<styleSheet xmlns="'+S+'"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="13"/><color rgb="FF005D63"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>';
+return zip([["[Content_Types].xml",XH+'<Types xmlns="'+CT+'"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/tables/table1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+["_rels/.rels",XH+'<Relationships xmlns="'+PKG+'"><Relationship Id="rId1" Type="'+REL+'/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+["xl/workbook.xml",XH+'<workbook xmlns="'+S+'" xmlns:r="'+REL+'"><sheets><sheet name="Requests" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+["xl/_rels/workbook.xml.rels",XH+'<Relationships xmlns="'+PKG+'"><Relationship Id="rId1" Type="'+REL+'/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="'+REL+'/styles" Target="styles.xml"/></Relationships>'],
+["xl/worksheets/sheet1.xml",sheet],
+["xl/worksheets/_rels/sheet1.xml.rels",XH+'<Relationships xmlns="'+PKG+'"><Relationship Id="rId1" Type="'+REL+'/table" Target="../tables/table1.xml"/></Relationships>'],
+["xl/tables/table1.xml",table],["xl/styles.xml",styles]]); }
+var DL={pol:["Cathay Workplace Policies (Sample).docx","application/vnd.openxmlformats-officedocument.wordprocessingml.document",buildDocx],trk:["Workplace Requests Tracker.xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",buildXlsx]};
+$$(".dlb").forEach(function(btn){ btn.addEventListener("click",function(){ var f=DL[btn.getAttribute("data-dl")]; var url=URL.createObjectURL(new Blob(f[2](),{type:f[1]})); var a=document.createElement("a"); a.href=url; a.download=f[0]; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url); },4000); }); });
+/* deep links: #learn or #files open the learner view */
+function deep(){ var h=location.hash; if(h==="#learn"||h==="#files"){ mode("l"); if(h==="#files") setTimeout(function(){ $("#files").scrollIntoView({block:"center"}); },50); } }
+window.addEventListener("hashchange",deep);
+fit(); go(0,0); deep();
 })();
 </script>
 </body>
